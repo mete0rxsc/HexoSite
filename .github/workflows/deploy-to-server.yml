@@ -1,0 +1,54 @@
+name: Deploy to Aliyun Server
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+      
+      - name: Prepare files locally
+        run: |
+          # 创建dist目录
+          mkdir -p ./deploy_dist
+          # 将所有文件（除了.git和.github）复制到deploy_dist
+          rsync -av --exclude='.git' --exclude='.github' --exclude='deploy_dist' ./ ./deploy_dist/
+          echo "✅ 文件已准备到 ./deploy_dist 目录："
+          ls -la ./deploy_dist/
+      
+      - name: Clean remote directory
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            # 确保/home/blog存在
+            mkdir -p /home/blog
+            # 彻底删除旧的dist（如果有）
+            rm -rf /home/blog/dist
+            # 创建新的空dist目录
+            mkdir -p /home/blog/dist
+            echo "✅ /home/blog/dist 已清空重建"
+      
+      - name: Deploy to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "./deploy_dist/*"  # 上传deploy_dist目录下的所有内容
+          target: "/home/blog/dist"   # 直接放到dist目录下
+          strip_components: 1         # 去掉deploy_dist这一层
+          rm: false                   # 因为我们已经手动清空了，这里不用再rm
