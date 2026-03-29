@@ -413,7 +413,7 @@
 
 </div>
 
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/p9m120250329/">2025三月小结</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/p720250327/">(三)</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/p10pm220250329/">《三月雪笺》</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/p9m120250329/">2025三月小结</a></div></section></div>
 
 
 
@@ -936,9 +936,9 @@
 
   function load_twikoo() {
     if (!el) return;
-    utils.js('https://gcore.jsdelivr.net/npm/@1.7.1/dist/.all.min.js', {defer: true}).then(function () {
+    utils.js('https://gcore.jsdelivr.net/npm/twikoo@1.7.1/dist/twikoo.all.min.js', {defer: true}).then(function () {
       const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
-      twikoo.init(Object.assign({"js":"https://gcore.jsdelivr.net/npm/@1.7.1/dist/.all.min.js","envId":"https://tk.xscnet.cn/"}, {
+      twikoo.init(Object.assign({"js":"https://gcore.jsdelivr.net/npm/twikoo@1.7.1/dist/twikoo.all.min.js","envId":"https://tk.xscnet.cn/"}, {
         el: '#twikoo_container',
         path: path,
       }));
