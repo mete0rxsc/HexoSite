@@ -1,0 +1,1637 @@
+<!DOCTYPE html><html lang="zh-CN"><head><!-- hexo injector head_begin start -->
+    <script>
+      window.LivePhotoConfig = {"enable":true,"autoplay":true,"hover_to_play":true,"click_to_play":true,"lazy_load":true,"threshold":0.7,"badge":true,"badge_text":"Live","badge_position":"bottom-left","loading_animation":true,"preload":"auto","keep_observing":false,"hover_delay":300,"weixin_disable_autoplay":true};
+    </script>
+  <style>/* Live Photo 容器 */
+.live-photo-container {
+  position: relative;
+  border-radius: 12px;
+  margin: 20px 0;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 100%;
+}
+
+.live-photo-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* 静态图片 */
+.live-photo-static {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  transition: opacity 0.3s;
+}
+
+/* 视频元素 */
+.live-photo-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  border-radius: 8px;
+  transition: opacity 0.3s;
+}
+
+.live-photo-video.playing {
+  opacity: 1;
+}
+
+/* Live 标识 */
+.live-badge {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.live-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #ff2e4d;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* 位置变体 */
+.live-badge.bottom-left {
+  bottom: 12px;
+  left: 12px;
+}
+
+.live-badge.bottom-right {
+  bottom: 12px;
+  right: 12px;
+}
+
+.live-badge.top-left {
+  top: 12px;
+  left: 12px;
+}
+
+.live-badge.top-right {
+  top: 12px;
+  right: 12px;
+}
+
+/* 加载指示器 */
+.live-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ff2e4d;
+  animation: livephoto-spin 1s ease-in-out infinite;
+  display: none;
+  z-index: 1;
+}
+
+@keyframes livephoto-spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 标题样式 */
+.live-caption {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .live-photo-container {
+    border-radius: 8px;
+    margin: 16px 0;
+  }
+  
+  .live-badge {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+  
+  .live-badge.bottom-left,
+  .live-badge.bottom-right {
+    bottom: 8px;
+  }
+  
+  .live-badge.bottom-left,
+  .live-badge.top-left {
+    left: 8px;
+  }
+  
+  .live-badge.bottom-right,
+  .live-badge.top-right {
+    right: 8px;
+  }
+  
+  .live-badge.top-left,
+  .live-badge.top-right {
+    top: 8px;
+  }
+  
+}
+
+/* 多图布局容器 */
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0;
+  gap: 15px; /* 使用gap属性设置间距 */
+}
+
+.image-column {
+  flex: 0 0 calc(50% - 8px); /* 每列占50%宽度减去一半的间距 */
+  min-width: 0; /* 防止内容溢出 */
+}
+
+/* Grid布局 */
+.image-grid-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 始终保持两列 */
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.grid-item {
+  position: relative;
+  min-width: 0; /* 防止内容溢出 */
+}
+
+/* 浮动布局 */
+.image-float-container {
+  width: 100%;
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.float-image {
+  flex: 0 0 calc(50% - 8px); /* 每列占50%宽度减去一半的间距 */
+}
+
+/* Live Photo 容器适配多图布局 */
+.image-grid .live-photo-container,
+.image-grid-grid .live-photo-container,
+.image-float-container .live-photo-container {
+  margin: 0; /* 移除单独设置的外边距 */
+  border-radius: 8px; /* 稍微减小圆角以适应小屏幕 */
+}
+
+/* 确保图片和视频在多图布局中正确显示 */
+.image-grid .live-photo-static,
+.image-grid-grid .live-photo-static,
+.image-float-container .live-photo-static,
+.image-grid .live-photo-video,
+.image-grid-grid .live-photo-video,
+.image-float-container .live-photo-video {
+  border-radius: 8px; /* 与容器保持一致 */
+}
+
+/* 调整Live标识在小屏幕上的大小 */
+.image-grid .live-badge,
+.image-grid-grid .live-badge,
+.image-float-container .live-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+}
+
+.image-grid .live-badge.bottom-left,
+.image-grid-grid .live-badge.bottom-left,
+.image-float-container .live-badge.bottom-left,
+.image-grid .live-badge.bottom-right,
+.image-grid-grid .live-badge.bottom-right,
+.image-float-container .live-badge.bottom-right {
+  bottom: 8px;
+}
+
+.image-grid .live-badge.bottom-left,
+.image-grid-grid .live-badge.bottom-left,
+.image-float-container .live-badge.bottom-left,
+.image-grid .live-badge.top-left,
+.image-grid-grid .live-badge.top-left,
+.image-float-container .live-badge.top-left {
+  left: 8px;
+}
+
+.image-grid .live-badge.bottom-right,
+.image-grid-grid .live-badge.bottom-right,
+.image-float-container .live-badge.bottom-right,
+.image-grid .live-badge.top-right,
+.image-grid-grid .live-badge.top-right,
+.image-float-container .live-badge.top-right {
+  right: 8px;
+}
+
+.image-grid .live-badge.top-left,
+.image-grid-grid .live-badge.top-left,
+.image-float-container .live-badge.top-left,
+.image-grid .live-badge.top-right,
+.image-grid-grid .live-badge.top-right,
+.image-float-container .live-badge.top-right {
+  top: 8px;
+}
+
+/* 非常小的设备调整 */
+@media (max-width: 360px) {
+  .image-grid {
+    gap: 10px;
+  }
+  
+  .image-column {
+    flex: 0 0 calc(50% - 5px); /* 调整间距 */
+  }
+  
+  .image-grid-grid {
+    gap: 10px;
+  }
+  
+  .float-image {
+    flex: 0 0 calc(50% - 5px); /* 调整间距 */
+  }
+  
+  /* 进一步调整Live标识 */
+  .image-grid .live-badge,
+  .image-grid-grid .live-badge,
+  .image-float-container .live-badge {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+}
+
+/* 确保单图布局不受影响 */
+.live-photo-container:not(.image-grid):not(.image-grid-grid):not(.image-float-container) {
+  margin: 20px 0;
+}
+
+/* 标题样式调整 */
+.live-caption {
+  font-size: 13px; /* 稍微减小字体大小 */
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+/* 确保加载指示器在多图布局中正确显示 */
+.image-grid .live-loading,
+.image-grid-grid .live-loading,
+.image-float-container .live-loading {
+  width: 30px;
+  height: 30px;
+}</style><!-- hexo injector head_begin end -->
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  
+  
+  <meta name="generator" content="Hexo 8.1.1">
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>使用Hexo搭建自己的博客 - -Mete0r's Blog | 壹人小站-</title>
+
+  
+    <meta name="description" content="本文为新手保姆级 Hexo 博客搭建教程，详细记录 NodeJS、Git、Hexo 框架的安装，Stellar 主题配置，以及 Artalk 评论、Lsky 图床部署和友链页面搭建，助力新手快速上手，加入博客圈，用文字留存热爱。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Hexo搭建自己的博客">
+<meta property="og:url" content="https://www.xscnet.cn/posts/p3520260403/">
+<meta property="og:site_name" content="-Mete0r's Blog | 壹人小站-">
+<meta property="og:description" content="本文为新手保姆级 Hexo 博客搭建教程，详细记录 NodeJS、Git、Hexo 框架的安装，Stellar 主题配置，以及 Artalk 评论、Lsky 图床部署和友链页面搭建，助力新手快速上手，加入博客圈，用文字留存热爱。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.xscnet.cn//i/2025/07/09/686e64ec429db.png">
+<meta property="article:published_time" content="2026-04-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-03T16:05:00.000Z">
+<meta property="article:author" content="Mete0r">
+<meta property="article:tag" content="博客">
+<meta property="article:tag" content="教学">
+<meta property="article:tag" content="服务器">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img.xscnet.cn//i/2025/07/09/686e64ec429db.png">
+  
+  
+  
+  <meta name="keywords" content="博客,教学,服务器">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="-Mete0r's Blog | 壹人小站-" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+    <link rel="shortcut icon" href="https://img.xscnet.cn//i/2025/10/30/6903707e73637.png">
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mete0r","sameAs":[],"image":"https://img.xscnet.cn//i/2025/07/09/686e64ec429db.png"},"dateCreated":"2026-04-03T00:00:00+08:00","dateModified":"2026-04-04T00:05:00+08:00","datePublished":"2026-04-03T00:00:00+08:00","description":"本文为新手保姆级 Hexo 博客搭建教程，详细记录 NodeJS、Git、Hexo 框架的安装，Stellar 主题配置，以及 Artalk 评论、Lsky 图床部署和友链页面搭建，助力新手快速上手，加入博客圈，用文字留存热爱。","headline":"使用Hexo搭建自己的博客","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.xscnet.cn/posts/p3520260403/"},"publisher":{"@type":"Organization","name":"Mete0r","sameAs":[],"image":"https://img.xscnet.cn//i/2025/07/09/686e64ec429db.png","logo":{"@type":"ImageObject","url":"https://img.xscnet.cn//i/2025/07/09/686e64ec429db.png"}},"url":"https://www.xscnet.cn/posts/p3520260403/","keywords":"博客, 教学, 服务器","thumbnailUrl":"https://img.xscnet.cn//i/2026/04/04/69cfe43350f0d.png","image":1}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="post" type="tech"><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy="" class="avatar" src="https://img.xscnet.cn//i/2025/07/09/686e64ec429db.png"></a><a class="title" href="/"><div class="main">-Mete0r's Blog | 壹人小站-</div><div class="sub normal cap">今人不见古时月，今月曾经照古人</div><div class="sub hover cap" style="opacity:0"> 我喜欢你</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="主页" href="/" style="color:#1BCDFC"><span>主页</span></a><a class="nav-item" title="关于" href="/about/" style="color:#3DC550"><span>关于</span></a><a class="nav-item" title="说说" href="/mmtalk/" style="color:#FA6400"><span>说说</span></a><a class="nav-item" title="社交" href="/links/" style="color:#F44336"><span>社交</span></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/posts/p3520260403/"><span class="title">使用Hexo搭建自己的博客</span></a><a class="item title" href="/posts/p3420260329/"><span class="title">博客源站IP泄露的两种主要方式与防护指南</span></a><a class="item title" href="/posts/p3320260325/"><span class="title">三月小记：春雨、体检与博客二三事</span></a><a class="item title" href="/posts/p3220260307/"><span class="title">近期随笔：对生活的总结和对博客主题的探索</span></a><a class="item title" href="/posts/p3120260303/"><span class="title">博客框架更新！</span></a><a class="item title" href="/posts/p3020260228/"><span class="title">各位，好久不见!</span></a><a class="item title" href="/posts/p2920251025/"><span class="title">致歉通知</span></a><a class="item title" href="/posts/p2820250829/"><span class="title">最近的小事</span></a><a class="item title" href="/posts/p2620250716/"><span class="title">站点更新！CDN优化！腾讯EO白嫖经历</span></a><a class="item title" href="/posts/p27202507162/"><span class="title">被迫购新的充电宝</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="/go.html?url=aHR0cHM6Ly9naXRodWIuY29tL21ldGUwcnhzYw" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/mete0rxsc/BlogStatic@master/Icon/svg/github-line.svg"></a><a class="social" href="/go.html?url=aHR0cHM6Ly94LmNvbS9DcW1veXVhbi8" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/mete0rxsc/BlogStatic@master/Icon/svg/twitter-x-line.svg"></a><a class="social" href="mailto:Mete0r_xsc@hotmail.com" rel="noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/mete0rxsc/BlogStatic@master/Icon/svg/mail-line.svg"></a><a class="social" href="https://www.travellings.cn/go.html" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/mete0rxsc/BlogStatic@master/Icon/svg/train-line.svg"></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%95%99%E5%AD%A6/">教学</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-04-02T16:00:00.000Z">2026-04-03</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-04-03T16:05:00.000Z">2026-04-04</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>使用Hexo搭建自己的博客</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="视频教程"><a href="#视频教程" class="headerlink" title="视频教程"></a>视频教程</h2><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>声明：此教程为新手保姆级教程，可能会有对您无用的废话，请移步至右上角菜单自行跳转需要的部分</strong>  </p>
+<p>写这篇教程的目的也是总结我的踩坑日记，帮助更多的新手朋友能接触到博客的圈子<br><strong>全篇使用到的工具已上传至<a href="">百度网盘</a> <a href="">夸克网盘</a> <a href="">蓝奏云</a></strong>  </p>
+<blockquote>
+<p>①* 本文默认本地开发环境为<code>Windows10/11 x64</code><br>②* 本文视频教程使用系统为<code>Windows10 x64</code><br>③* 本文默认服务器部署环境为<code>Ubuntu22.04 LTS</code><br>④* 大部分下载失败都是网络问题，需自行寻找解决方案  </p>
+</blockquote>
+<h2 id="Hexo框架-①"><a href="#Hexo框架-①" class="headerlink" title="Hexo框架 *①"></a>Hexo框架 *①</h2><h3 id="01-安装核心工具NodeJS和Git"><a href="#01-安装核心工具NodeJS和Git" class="headerlink" title="01.安装核心工具NodeJS和Git"></a>01.安装核心工具NodeJS和Git</h3><h4 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤:"></a>操作步骤:</h4><h5 id="1-1-安装-Node-js"><a href="#1-1-安装-Node-js" class="headerlink" title="1.1 .安装 Node.js"></a>1.1 .安装 Node.js</h5><ul>
+<li>官网：<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9ub2RlanMub3JnL3poLWNuL2Rvd25sb2Fk">Download | Node.js</a>  </li>
+<li>版本建议: Hexo 要求 NodeJS 版本<strong>不低于</strong> <code>10.13</code>，建议使用 12.0 及以上版本的 LTS 版  </li>
+<li>安装注意: 安装程序时，请确保勾选 <code>Add to PATH</code> 选项，这会让系统能随时在命令行中找到NodeJS</li>
+</ul>
+<h5 id="1-2-安装-Git"><a href="#1-2-安装-Git" class="headerlink" title="1.2 .安装 Git"></a>1.2 .安装 Git</h5><ul>
+<li>官网：<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9naXQtc2NtLmNvbS9pbnN0YWxsL3dpbmRvd3M">Downloads | Git</a>  </li>
+<li>下载注意: 请根据您的CPU架构选择版本，大部分人选择<code>Git for Windows/x64 Setup</code> 即可</li>
+</ul>
+<h5 id="1-3-检查安装状态"><a href="#1-3-检查安装状态" class="headerlink" title="1.3. 检查安装状态"></a>1.3. 检查安装状态</h5><p>随意位置打开CMD，依次运行命令：  </p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br><span class="line">git -v</span><br></pre></td></tr></tbody></table></figure>
+<p>若看到返回版本信息，证明安装成功<br>如下图：<br><img src="https://img.xscnet.cn//i/2026/04/03/69cfc5d39a6d2.png" alt="版本检查">   </p>
+<h3 id="02-安装Hexo博客框架"><a href="#02-安装Hexo博客框架" class="headerlink" title="02.安装Hexo博客框架"></a>02.安装Hexo博客框架</h3><h4 id="2-1-安装Hexo"><a href="#2-1-安装Hexo" class="headerlink" title="2.1. 安装Hexo"></a>2.1. 安装Hexo</h4><p>运行如下命令：  </p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></tbody></table></figure>
+<p><img src="https://img.xscnet.cn//i/2026/04/03/69cfc67f97002.webp" alt="hexo install hexo-cli"></p>
+<h4 id="2-2-创建博客本地开发环境文件夹"><a href="#2-2-创建博客本地开发环境文件夹" class="headerlink" title="2.2. 创建博客本地开发环境文件夹"></a>2.2. 创建博客本地开发环境文件夹</h4><p><strong>注意：这个文件夹内的文件不要放在公开类型的仓库中，若您配置了需要Token的项目，会有Token泄露风险</strong>  </p>
+<p>在你需要的位置创建一个文件夹<code>(名称不要有中文)</code>例如./HexoBlog<br>在地址栏双击运行<code>cmd</code><br>运行如下命令：  </p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p>提示：若出现‘command not found’，就在前面加上npx，如：npx hexo init<br>此步是从Github下载资源 *④</p>
+</blockquote>
+<p>完成则如下图所示：<br><img src="https://img.xscnet.cn//i/2026/04/03/69cfc817049dd.webp" alt="hexo init">  </p>
+<p>继续输入：  </p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></tbody></table></figure>
+<p><img src="https://img.xscnet.cn//i/2026/04/03/69cfc9031ea66.png" alt="npm install"><br>这个时候你的博客就已经下载完成了，只不过刚开始还是默认主题，并且尚且没有配置任何个性化的项目<br>你可以用<code>hexo server</code>命令启动博客，访问<code>http://localhost:4000</code>即可看到博客(Ctrl+C结束程序)<br><img src="https://img.xscnet.cn//i/2026/04/03/69cfc95aef98a.webp" alt="hexo server">  </p>
+<h4 id="2-3-下载你喜欢的博客主题"><a href="#2-3-下载你喜欢的博客主题" class="headerlink" title="2.3. 下载你喜欢的博客主题"></a>2.3. 下载你喜欢的博客主题</h4><blockquote>
+<p>这里以我自己用的<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9naXRodWIuY29tL3hhb3h1dS9oZXhvLXRoZW1lLXN0ZWxsYXI">Hexo - Stellar主题</a>为例  </p>
+</blockquote>
+<h3 id="03-安装主题并修改配置文件"><a href="#03-安装主题并修改配置文件" class="headerlink" title="03. 安装主题并修改配置文件"></a>03. 安装主题并修改配置文件</h3><h4 id="3-1-安装主题"><a href="#3-1-安装主题" class="headerlink" title="3.1. 安装主题"></a>3.1. 安装主题</h4><p>在地址栏双击运行<code>cmd</code><br>输入命令：  </p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i hexo-theme-stellar --save</span><br></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p>从 Hexo 7.x 版本开始，通过 npm install 安装的主题会存放在 node_modules 目录下，而不再是 themes 文件夹  </p>
+</blockquote>
+<h4 id="3-2-修改配置文件"><a href="#3-2-修改配置文件" class="headerlink" title="3.2. 修改配置文件"></a>3.2. 修改配置文件</h4><h5 id="3-2-1-下载VSCode-The-open-source-AI-code-edito"><a href="#3-2-1-下载VSCode-The-open-source-AI-code-edito" class="headerlink" title="3.2.1. 下载VSCode | The open source AI code edito"></a>3.2.1. 下载<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9jb2RlLnZpc3VhbHN0dWRpby5jb20v">VSCode | The open source AI code edito</a></h5><ul>
+<li>官网：<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9jb2RlLnZpc3VhbHN0dWRpby5jb20vRG93bmxvYWQ">Download | VSCode</a>  </li>
+<li>安装：全部无脑下一步即可，建议选择SSD硬盘安装，以加速启动速度  </li>
+<li>插件推荐：Bracket Pair Color DLW / indent-rainbow / Markdown Preview Enhanced / Dracula Theme Official</li>
+</ul>
+<h5 id="3-2-2-更改VSCode语言为简体中文"><a href="#3-2-2-更改VSCode语言为简体中文" class="headerlink" title="3.2.2. 更改VSCode语言为简体中文"></a>3.2.2. 更改VSCode语言为<code>简体中文</code></h5><ol>
+<li>点击左侧插件库图标  </li>
+<li>搜索<code>Chinese</code>  </li>
+<li>安装<code>Chinese (Simplified) 简体中文</code>  </li>
+<li>重启VSCode<br><img src="https://img.xscnet.cn//i/2026/04/03/69cfcc546853e.webp" alt="VSCode"></li>
+</ol>
+<h5 id="3-2-3-修改Hexo配置文件"><a href="#3-2-3-修改Hexo配置文件" class="headerlink" title="3.2.3. 修改Hexo配置文件"></a>3.2.3. 修改Hexo配置文件</h5><p>使用VSCode打开博客项目文件夹<br>选中<code>_config.yml</code>文件  </p>
+<p>可以直接粘贴替换为以下代码：  </p>
+<details class="tag-plugin colorful folding" color="dark" child="codeblock" open=""><summary><p>_config.yml</p>
+</summary><div class="body"><figure class="highlight yml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Hexo Configuration</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/configuration.html</span></span><br><span class="line"><span class="comment">## Source: https://github.com/hexojs/hexo/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Mete0r注释版本，Site部分并未修改原始内容，请自行更改，仅更改了Theme项目为Stellar，博客文章: https://www.xscnet.cn/posts/p3520260403/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Site</span></span><br><span class="line"><span class="attr">title:</span>  <span class="comment">#你的博客标题</span></span><br><span class="line"><span class="attr">subtitle:</span> <span class="string">''</span> <span class="comment">#你的博客副标题</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">''</span> <span class="comment">#你的博客简介</span></span><br><span class="line"><span class="attr">favicon:</span> <span class="string">""</span> <span class="comment">#网站ICON</span></span><br><span class="line"><span class="attr">avatar:</span> <span class="string">""</span> <span class="comment">#你的头像</span></span><br><span class="line"><span class="attr">keywords:</span> <span class="comment">#关键词</span></span><br><span class="line"><span class="attr">author:</span> <span class="string">John</span> <span class="string">Doe</span> <span class="comment">#作者</span></span><br><span class="line"><span class="attr">language:</span> <span class="string">en</span> <span class="comment">#语言，国人可以填写zh-CN</span></span><br><span class="line"><span class="attr">timezone:</span> <span class="string">''</span> <span class="comment">#时区，国人可以填写Asia/Shanghai</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">http://example.com</span> <span class="comment">#你的站点URL</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">:year/:month/:day/:title/</span> <span class="comment">#文章链接格式，Mete0r使用的是: posts/:title/</span></span><br><span class="line"><span class="attr">permalink_defaults:</span> <span class="comment">#从这往下到第100行可以不用更改，如您需要自定义，可以咨询AI  </span></span><br><span class="line"><span class="attr">pretty_urls:</span></span><br><span class="line">  <span class="attr">trailing_index:</span> <span class="literal">true</span> <span class="comment"># Set to false to remove trailing 'index.html' from permalinks</span></span><br><span class="line">  <span class="attr">trailing_html:</span> <span class="literal">true</span> <span class="comment"># Set to false to remove trailing '.html' from permalinks</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Directory</span></span><br><span class="line"><span class="attr">source_dir:</span> <span class="string">source</span></span><br><span class="line"><span class="attr">public_dir:</span> <span class="string">public</span></span><br><span class="line"><span class="attr">tag_dir:</span> <span class="string">tags</span></span><br><span class="line"><span class="attr">archive_dir:</span> <span class="string">archives</span></span><br><span class="line"><span class="attr">category_dir:</span> <span class="string">categories</span></span><br><span class="line"><span class="attr">code_dir:</span> <span class="string">downloads/code</span></span><br><span class="line"><span class="attr">i18n_dir:</span> <span class="string">:lang</span></span><br><span class="line"><span class="attr">skip_render:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Writing</span></span><br><span class="line"><span class="attr">new_post_name:</span> <span class="string">:title.md</span> <span class="comment"># File name of new posts</span></span><br><span class="line"><span class="attr">default_layout:</span> <span class="string">post</span></span><br><span class="line"><span class="attr">titlecase:</span> <span class="literal">false</span> <span class="comment"># Transform title into titlecase</span></span><br><span class="line"><span class="attr">external_link:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span> <span class="comment"># Open external links in new tab</span></span><br><span class="line">  <span class="attr">field:</span> <span class="string">site</span> <span class="comment"># Apply to the whole site</span></span><br><span class="line">  <span class="attr">exclude:</span> <span class="string">''</span></span><br><span class="line"><span class="attr">filename_case:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">render_drafts:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">relative_link:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">future:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">syntax_highlighter:</span> <span class="string">highlight.js</span></span><br><span class="line"><span class="attr">highlight:</span></span><br><span class="line">  <span class="attr">line_number:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">auto_detect:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tab_replace:</span> <span class="string">''</span></span><br><span class="line">  <span class="attr">wrap:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hljs:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">prismjs:</span></span><br><span class="line">  <span class="attr">preprocess:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">line_number:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">tab_replace:</span> <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Home page setting</span></span><br><span class="line"><span class="comment"># path: Root path for your blogs index page. (default = '')</span></span><br><span class="line"><span class="comment"># per_page: Posts displayed per page. (0 = disable pagination)</span></span><br><span class="line"><span class="comment"># order_by: Posts order. (Order by date descending by default)</span></span><br><span class="line"><span class="attr">index_generator:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">''</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">order_by:</span> <span class="string">-date</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Category &amp; Tag</span></span><br><span class="line"><span class="attr">default_category:</span> <span class="string">uncategorized</span></span><br><span class="line"><span class="attr">category_map:</span></span><br><span class="line"><span class="attr">tag_map:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Metadata elements</span></span><br><span class="line"><span class="comment">## https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta</span></span><br><span class="line"><span class="attr">meta_generator:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Date / Time format</span></span><br><span class="line"><span class="comment">## Hexo uses Moment.js to parse and display date</span></span><br><span class="line"><span class="comment">## You can customize the date format as defined in</span></span><br><span class="line"><span class="comment">## http://momentjs.com/docs/#/displaying/format/</span></span><br><span class="line"><span class="attr">date_format:</span> <span class="string">YYYY-MM-DD</span></span><br><span class="line"><span class="attr">time_format:</span> <span class="string">HH:mm:ss</span></span><br><span class="line"><span class="comment">## updated_option supports 'mtime', 'date', 'empty'</span></span><br><span class="line"><span class="attr">updated_option:</span> <span class="string">'mtime'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Pagination</span></span><br><span class="line"><span class="comment">## Set per_page to 0 to disable pagination</span></span><br><span class="line"><span class="attr">per_page:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">pagination_dir:</span> <span class="string">page</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Include / Exclude file(s)</span></span><br><span class="line"><span class="comment">## include:/exclude: options only apply to the 'source/' folder</span></span><br><span class="line"><span class="attr">include:</span></span><br><span class="line"><span class="attr">exclude:</span></span><br><span class="line"><span class="attr">ignore:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Extensions</span></span><br><span class="line"><span class="comment">## Plugins: https://hexo.io/plugins/</span></span><br><span class="line"><span class="comment">## Themes: https://hexo.io/themes/</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">stellar</span> <span class="comment">#从这里开始改动，设置你的主题  </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">''</span></span><br></pre></td></tr></tbody></table></figure></div></details>
+
+<h5 id="3-2-4-配置主题"><a href="#3-2-4-配置主题" class="headerlink" title="3.2.4. 配置主题"></a>3.2.4. 配置主题</h5><ol>
+<li>在博客项目文件夹中运行以下命令以创建主题的默认配置文件：</li>
+</ol>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy .\node_modules\hexo-theme-stellar\_config.yml .\_config.stellar.yml</span><br></pre></td></tr></tbody></table></figure>
+<ol start="2">
+<li>配置主题配置文件<code>.\_config.stellar.yml</code><br><strong>此项目由于自定义程度过高，不予详细介绍，请自行根据注释修改，如有任何问题，欢迎在评论区进行提问</strong></li>
+</ol>
+<details class="tag-plugin colorful folding" color="dark" child="codeblock" open=""><summary><p>_config.stellar.yml</p>
+</summary><div class="body"><figure class="highlight yml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br><span class="line">565</span><br><span class="line">566</span><br><span class="line">567</span><br><span class="line">568</span><br><span class="line">569</span><br><span class="line">570</span><br><span class="line">571</span><br><span class="line">572</span><br><span class="line">573</span><br><span class="line">574</span><br><span class="line">575</span><br><span class="line">576</span><br><span class="line">577</span><br><span class="line">578</span><br><span class="line">579</span><br><span class="line">580</span><br><span class="line">581</span><br><span class="line">582</span><br><span class="line">583</span><br><span class="line">584</span><br><span class="line">585</span><br><span class="line">586</span><br><span class="line">587</span><br><span class="line">588</span><br><span class="line">589</span><br><span class="line">590</span><br><span class="line">591</span><br><span class="line">592</span><br><span class="line">593</span><br><span class="line">594</span><br><span class="line">595</span><br><span class="line">596</span><br><span class="line">597</span><br><span class="line">598</span><br><span class="line">599</span><br><span class="line">600</span><br><span class="line">601</span><br><span class="line">602</span><br><span class="line">603</span><br><span class="line">604</span><br><span class="line">605</span><br><span class="line">606</span><br><span class="line">607</span><br><span class="line">608</span><br><span class="line">609</span><br><span class="line">610</span><br><span class="line">611</span><br><span class="line">612</span><br><span class="line">613</span><br><span class="line">614</span><br><span class="line">615</span><br><span class="line">616</span><br><span class="line">617</span><br><span class="line">618</span><br><span class="line">619</span><br><span class="line">620</span><br><span class="line">621</span><br><span class="line">622</span><br><span class="line">623</span><br><span class="line">624</span><br><span class="line">625</span><br><span class="line">626</span><br><span class="line">627</span><br><span class="line">628</span><br><span class="line">629</span><br><span class="line">630</span><br><span class="line">631</span><br><span class="line">632</span><br><span class="line">633</span><br><span class="line">634</span><br><span class="line">635</span><br><span class="line">636</span><br><span class="line">637</span><br><span class="line">638</span><br><span class="line">639</span><br><span class="line">640</span><br><span class="line">641</span><br><span class="line">642</span><br><span class="line">643</span><br><span class="line">644</span><br><span class="line">645</span><br><span class="line">646</span><br><span class="line">647</span><br><span class="line">648</span><br><span class="line">649</span><br><span class="line">650</span><br><span class="line">651</span><br><span class="line">652</span><br><span class="line">653</span><br><span class="line">654</span><br><span class="line">655</span><br><span class="line">656</span><br><span class="line">657</span><br><span class="line">658</span><br><span class="line">659</span><br><span class="line">660</span><br><span class="line">661</span><br><span class="line">662</span><br><span class="line">663</span><br><span class="line">664</span><br><span class="line">665</span><br><span class="line">666</span><br><span class="line">667</span><br><span class="line">668</span><br><span class="line">669</span><br><span class="line">670</span><br><span class="line">671</span><br><span class="line">672</span><br><span class="line">673</span><br><span class="line">674</span><br><span class="line">675</span><br><span class="line">676</span><br><span class="line">677</span><br><span class="line">678</span><br><span class="line">679</span><br><span class="line">680</span><br><span class="line">681</span><br><span class="line">682</span><br><span class="line">683</span><br><span class="line">684</span><br><span class="line">685</span><br><span class="line">686</span><br><span class="line">687</span><br><span class="line">688</span><br><span class="line">689</span><br><span class="line">690</span><br><span class="line">691</span><br><span class="line">692</span><br><span class="line">693</span><br><span class="line">694</span><br><span class="line">695</span><br><span class="line">696</span><br><span class="line">697</span><br><span class="line">698</span><br><span class="line">699</span><br><span class="line">700</span><br><span class="line">701</span><br><span class="line">702</span><br><span class="line">703</span><br><span class="line">704</span><br><span class="line">705</span><br><span class="line">706</span><br><span class="line">707</span><br><span class="line">708</span><br><span class="line">709</span><br><span class="line">710</span><br><span class="line">711</span><br><span class="line">712</span><br><span class="line">713</span><br><span class="line">714</span><br><span class="line">715</span><br><span class="line">716</span><br><span class="line">717</span><br><span class="line">718</span><br><span class="line">719</span><br><span class="line">720</span><br><span class="line">721</span><br><span class="line">722</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">######## Stellar info ########</span></span><br><span class="line"><span class="attr">stellar:</span></span><br><span class="line">  <span class="attr">version:</span> <span class="string">'1.33.1'</span></span><br><span class="line">  <span class="attr">homepage:</span> <span class="string">'https://xaoxuu.com/wiki/stellar/'</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">'https://github.com/xaoxuu/hexo-theme-stellar'</span></span><br><span class="line">  <span class="attr">main_css:</span> <span class="string">/css/main.css</span></span><br><span class="line">  <span class="attr">main_js:</span> <span class="string">/js/main.js</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## head tags ########</span></span><br><span class="line"><span class="attr">preconnect:</span></span><br><span class="line">  <span class="comment"># - https://gcore.jsdelivr.net</span></span><br><span class="line">  <span class="comment"># - https://gcore.jsdelivr.net</span></span><br><span class="line">  <span class="comment"># - https://unpkg.com</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 一旦设置源站地址，非源站地址将不会被SEO收录，并且访问时弹出提示</span></span><br><span class="line"><span class="comment"># 如果访问地址不在备用站主机列表，则警告信息为非法克隆</span></span><br><span class="line"><span class="attr">canonical:</span></span><br><span class="line">  <span class="attr">originalHost:</span> <span class="comment"># 主站点域名主机，例如 xaoxuu.com</span></span><br><span class="line">  <span class="attr">officialHosts:</span> <span class="comment"># 官方主机列表，每行一个，例如 xaoxuu.vercel.app</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">localhost</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">example.com</span> <span class="comment"># 这个要填写你的域名哦，要不会触发非法克隆提示</span></span><br><span class="line"></span><br><span class="line"><span class="attr">open_graph:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">twitter_id:</span> <span class="comment"># for open_graph meta</span></span><br><span class="line"></span><br><span class="line"><span class="attr">structured_data:</span></span><br><span class="line">  <span class="attr">links:</span> [] <span class="comment"># your social links.</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## Sidebar ########</span></span><br><span class="line"><span class="comment"># 左上角显示的 logo 区域，包含图标、大标题、副标题</span></span><br><span class="line"><span class="attr">logo:</span></span><br><span class="line">  <span class="attr">avatar:</span> <span class="string">'[{config.avatar}](/about/)'</span> <span class="comment"># you can set avatar link in _config.yml or '[https://xxx.png](/about/)'</span></span><br><span class="line">  <span class="attr">title:</span> <span class="string">'[{config.title}](/)'</span> <span class="comment"># you can set html tag like: '[&lt;img no-lazy height="32px" src="xxx"/&gt;](/)'</span></span><br><span class="line">  <span class="attr">subtitle:</span> <span class="string">'{config.subtitle}'</span> <span class="comment"># '文字1 | 文字2' (鼠标放上去会切换到文字2)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 侧边栏主功能导航菜单</span></span><br><span class="line"><span class="attr">menubar:</span></span><br><span class="line">  <span class="attr">columns:</span> <span class="number">4</span> <span class="comment"># 一行多少个</span></span><br><span class="line">  <span class="attr">items:</span> <span class="comment"># 可按照自己需求增加，符合以下格式即可</span></span><br><span class="line">    <span class="comment"># id: 页面中高亮的 menu_id </span></span><br><span class="line">    <span class="comment"># theme: 高亮时的颜色，仅 svg 中 fill="currentColor" 时有效</span></span><br><span class="line">    <span class="comment"># icon: 支持 svg/img 标签，可以定义在 icons.yml 文件中，也支持外部图片的 URL</span></span><br><span class="line">    <span class="comment"># title: 标题</span></span><br><span class="line">    <span class="comment"># url: 点击跳转到哪，支持相对路径和绝对路径</span></span><br><span class="line">    <span class="comment"># - id: post</span></span><br><span class="line">    <span class="comment">#   theme: '#1BCDFC'</span></span><br><span class="line">    <span class="comment">#   icon: solar:documents-bold-duotone</span></span><br><span class="line">    <span class="comment">#   title: 博客</span></span><br><span class="line">    <span class="comment">#   url: /</span></span><br><span class="line">    <span class="comment"># - id: wiki</span></span><br><span class="line">    <span class="comment">#   theme: '#3DC550'</span></span><br><span class="line">    <span class="comment">#   icon: solar:notebook-bookmark-bold-duotone</span></span><br><span class="line">    <span class="comment">#   title: 文档</span></span><br><span class="line">    <span class="comment">#   url: /wiki/</span></span><br><span class="line">    <span class="comment"># - id: explore</span></span><br><span class="line">    <span class="comment">#   theme: '#FA6400'</span></span><br><span class="line">    <span class="comment">#   icon: solar:planet-bold-duotone</span></span><br><span class="line">    <span class="comment">#   title: 探索</span></span><br><span class="line">    <span class="comment">#   url: /explore/</span></span><br><span class="line">    <span class="comment"># - id: social</span></span><br><span class="line">    <span class="comment">#   theme: '#F44336'</span></span><br><span class="line">    <span class="comment">#   icon: solar:chat-square-like-bold-duotone</span></span><br><span class="line">    <span class="comment">#   title: 社交</span></span><br><span class="line">    <span class="comment">#   url: /friends/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## Main ########</span></span><br><span class="line"><span class="comment"># 站点主结构树</span></span><br><span class="line"><span class="attr">site_tree:</span></span><br><span class="line">  <span class="comment"># -- 列表类页面 -- #</span></span><br><span class="line">  <span class="comment"># 主页配置</span></span><br><span class="line">  <span class="attr">home:</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">welcome,</span> <span class="string">recent</span></span><br><span class="line">    <span class="attr">rightbar:</span> </span><br><span class="line">  <span class="comment"># 博客列表页配置</span></span><br><span class="line">  <span class="attr">index_blog:</span></span><br><span class="line">    <span class="attr">base_dir:</span> <span class="string">blog</span> <span class="comment"># 只影响自动生成的页面路径</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">post</span> <span class="comment"># 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">welcome,</span> <span class="string">recent</span> <span class="comment"># for categories/tags/archives</span></span><br><span class="line">    <span class="attr">rightbar:</span> </span><br><span class="line">    <span class="attr">nav_tabs:</span>  <span class="comment"># 近期发布 分类 标签 专栏 归档 and ...</span></span><br><span class="line">      <span class="comment"># '朋友文章': /friends/rss/</span></span><br><span class="line">  <span class="comment"># 博客专栏列表页配置</span></span><br><span class="line">  <span class="attr">index_topic:</span></span><br><span class="line">    <span class="attr">base_dir:</span> <span class="string">topic</span> <span class="comment"># 只影响自动生成的页面路径</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">post</span> <span class="comment"># 未在 front-matter 中指定 menu_id 时，layout 为 topic 的页面默认使用这里配置的 menu_id</span></span><br><span class="line">  <span class="comment"># 文档列表页配置</span></span><br><span class="line">  <span class="attr">index_wiki:</span></span><br><span class="line">    <span class="attr">base_dir:</span> <span class="string">wiki</span> <span class="comment"># 只影响自动生成的页面路径</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">wiki</span> <span class="comment"># 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">related,</span> <span class="string">recent</span> <span class="comment"># for wiki</span></span><br><span class="line">    <span class="attr">rightbar:</span> </span><br><span class="line">    <span class="attr">nav_tabs:</span></span><br><span class="line">      <span class="comment"># 'more': https://github.com/xaoxuu</span></span><br><span class="line">  <span class="comment"># -- 内容类页面 -- #</span></span><br><span class="line">  <span class="comment"># 博客文章内页配置</span></span><br><span class="line">  <span class="attr">post:</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">post</span> <span class="comment"># 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">related,</span> <span class="string">recent</span> <span class="comment"># for pages using 'layout:post'</span></span><br><span class="line">    <span class="attr">rightbar:</span> <span class="string">ghrepo,</span> <span class="string">toc</span></span><br><span class="line">  <span class="comment"># 博客专栏文章内页配置</span></span><br><span class="line">  <span class="attr">topic:</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">post</span></span><br><span class="line">  <span class="comment"># 文档内页配置</span></span><br><span class="line">  <span class="attr">wiki:</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">wiki</span> <span class="comment"># 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">tree,</span> <span class="string">related,</span> <span class="string">recent</span> <span class="comment"># for wiki</span></span><br><span class="line">    <span class="attr">rightbar:</span> <span class="string">ghrepo,</span> <span class="string">toc</span></span><br><span class="line">  <span class="comment"># 笔记本列表页配置</span></span><br><span class="line">  <span class="attr">notebooks:</span></span><br><span class="line">    <span class="attr">base_dir:</span> <span class="string">notebooks</span> <span class="comment"># 笔记本列表页的路径。以及未指定 base_dir 的笔记本的路径前缀。</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">notebooks</span> <span class="comment"># 笔记本列表页高亮的主导航栏菜单按钮。</span></span><br><span class="line">    <span class="comment"># 笔记本列表页的左侧栏和右侧栏。</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">recent</span> <span class="comment"># recent within all notebooks</span></span><br><span class="line">    <span class="attr">rightbar:</span> <span class="literal">null</span></span><br><span class="line">  <span class="comment"># 笔记列表页配置</span></span><br><span class="line">  <span class="attr">notes:</span></span><br><span class="line">    <span class="comment"># 笔记列表页和笔记页高亮的主导航栏菜单按钮。</span></span><br><span class="line">    <span class="comment"># 可以在笔记本 yaml 的 menu_id 字段中覆盖此参数。</span></span><br><span class="line">    <span class="comment"># 可以在笔记的 front-matter/menu_id 中覆盖此参数。</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">notebooks</span></span><br><span class="line">    <span class="comment"># 笔记列表页的左侧栏和右侧栏。可以在笔记本 yaml 的 leftbar 和 rightbar 字段中覆盖此参数。</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">tagtree,</span> <span class="string">recent</span> <span class="comment"># recent of current notebook</span></span><br><span class="line">    <span class="attr">rightbar:</span> <span class="literal">null</span></span><br><span class="line">  <span class="comment"># 笔记页配置</span></span><br><span class="line">  <span class="attr">note:</span></span><br><span class="line">    <span class="comment"># 笔记页的左侧栏和右侧栏</span></span><br><span class="line">    <span class="comment"># 可以在笔记本 yaml 的 note_leftbar 和 note_rightbar 字段中覆盖此参数。</span></span><br><span class="line">    <span class="comment"># 可以在笔记的 front-matter/leftbar 和 rightbar 字段中覆盖此参数。</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">tagtree,</span> <span class="string">recent</span> <span class="comment"># recent of current notebook</span></span><br><span class="line">    <span class="attr">rightbar:</span> <span class="string">toc</span></span><br><span class="line">  <span class="comment"># 作者信息配置</span></span><br><span class="line">  <span class="attr">author:</span> </span><br><span class="line">    <span class="attr">base_dir:</span> <span class="string">author</span> <span class="comment"># 只影响自动生成的页面路径</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">post</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">recent,</span> <span class="string">timeline</span></span><br><span class="line">    <span class="attr">rightbar:</span> <span class="string">timeline</span></span><br><span class="line">  <span class="comment"># 错误页配置</span></span><br><span class="line">  <span class="attr">error_page:</span></span><br><span class="line">    <span class="attr">menu_id:</span> <span class="string">post</span></span><br><span class="line">    <span class="attr">'404':</span> <span class="string">'/404.html'</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">recent,</span> <span class="string">timeline</span></span><br><span class="line">    <span class="attr">rightbar:</span> <span class="string">timeline</span></span><br><span class="line">  <span class="comment"># 其它自定义页面配置 layout: page</span></span><br><span class="line">  <span class="attr">page:</span></span><br><span class="line">    <span class="attr">leftbar:</span> <span class="string">recent</span></span><br><span class="line">    <span class="attr">rightbar:</span> <span class="string">toc</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## Notebook ########</span></span><br><span class="line"><span class="attr">notebook:</span></span><br><span class="line">  <span class="comment"># 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要。</span></span><br><span class="line">  <span class="attr">auto_excerpt:</span> <span class="number">128</span></span><br><span class="line">  <span class="comment"># 可以为某个 tag 设定图标（显示在标签树中）。</span></span><br><span class="line">  <span class="attr">tagcons:</span></span><br><span class="line">    <span class="string">''</span><span class="string">:</span> <span class="string">solar:hashtag-square-bold</span></span><br><span class="line">  <span class="comment"># 每页显示多少篇笔记。0 表示不分页，null 则 fallback 到 hexo 的配置。</span></span><br><span class="line">  <span class="comment"># 可以在笔记本 yaml 的 per_page 字段中覆盖此参数。</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="literal">null</span></span><br><span class="line">  <span class="comment"># 笔记的排序方式。默认按照 updated 降序排序。</span></span><br><span class="line">  <span class="comment"># 可以在笔记本 yaml 的 order_by 字段中覆盖此参数。</span></span><br><span class="line">  <span class="comment"># 注意：置顶的笔记会始终排在最前面。</span></span><br><span class="line">  <span class="comment"># 在 front-matter 中设置 pin:true|number 或 sticky:true|number 来置顶。</span></span><br><span class="line">  <span class="attr">order_by:</span> <span class="string">-updated</span></span><br><span class="line">  <span class="comment"># 是否在笔记页面显示许可协议。false 表示不显示。true 表示沿用主题许可协议内容。也可以给定具体的文本指定协议内容。</span></span><br><span class="line">  <span class="comment"># 可以在笔记本 yaml 的 license 字段中覆盖此参数。</span></span><br><span class="line">  <span class="comment"># 可以在笔记的 front-matter/license 中覆盖此参数。</span></span><br><span class="line">  <span class="attr">license:</span> <span class="literal">false</span></span><br><span class="line">  <span class="comment"># 是否在笔记页面显示分享按钮。</span></span><br><span class="line">  <span class="comment"># 可以在笔记本 yaml 的 share 字段中覆盖此参数。</span></span><br><span class="line">  <span class="comment"># 可以在笔记的 front-matter/share 中覆盖此参数。</span></span><br><span class="line">  <span class="attr">share:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## Article ########</span></span><br><span class="line"><span class="attr">article:</span></span><br><span class="line">  <span class="comment"># 文章类型，决定布局风格，可以在 front-matter/topic/wiki 中覆盖此参数</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">tech</span> <span class="comment"># tech: 默认技术类文章, story: 图文类文章，文字和段落间增距大</span></span><br><span class="line">  <span class="comment"># 缩进两个文字宽度，适合文字类博客，可以在 front-matter/topic/wiki 中覆盖此参数</span></span><br><span class="line">  <span class="attr">indent:</span> <span class="comment"># true / false</span></span><br><span class="line">  <span class="comment"># 封面图宽高比</span></span><br><span class="line">  <span class="attr">cover_ratio:</span> <span class="number">2</span></span><br><span class="line">  <span class="comment"># 文章内横幅宽高比</span></span><br><span class="line">  <span class="attr">banner_ratio:</span> <span class="number">2.5</span></span><br><span class="line">  <span class="comment"># 如果没有指定横幅，是否根据 tags 作为关键词搜索横幅图片？</span></span><br><span class="line">  <span class="attr">auto_banner:</span> <span class="literal">false</span> <span class="comment"># search from https://source.unsplash.com/</span></span><br><span class="line">  <span class="comment"># 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？</span></span><br><span class="line">  <span class="attr">auto_excerpt:</span> <span class="number">128</span></span><br><span class="line">  <span class="comment"># 分类颜色</span></span><br><span class="line">  <span class="attr">category_color:</span></span><br><span class="line">    <span class="string">'探索号'</span><span class="string">:</span> <span class="string">'#f44336'</span></span><br><span class="line">  <span class="comment"># 文章许可协议</span></span><br><span class="line">  <span class="attr">license:</span> <span class="string">'本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'</span></span><br><span class="line">  <span class="comment"># 分享</span></span><br><span class="line">  <span class="attr">share:</span> <span class="comment"># [wechat, weibo, email, link]</span></span><br><span class="line">  <span class="comment"># 相关文章，需要安装插件 (for layout: post)</span></span><br><span class="line">  <span class="comment"># npm i hexo-related-popular-posts</span></span><br><span class="line">  <span class="attr">related_posts:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">max_count:</span> <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="attr">search:</span></span><br><span class="line">  <span class="attr">service:</span> <span class="string">local_search</span> <span class="comment"># local_search, algolia_search, todo...</span></span><br><span class="line">  <span class="attr">local_search:</span> <span class="comment"># 在 front-matter 中设置 indexing:false 来避免被搜索索引</span></span><br><span class="line">    <span class="attr">field:</span> <span class="string">all</span> <span class="comment"># post, page, all</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">/search.json</span> <span class="comment"># 搜索文件存放位置</span></span><br><span class="line">    <span class="attr">content:</span> <span class="literal">true</span> <span class="comment"># 是否搜索内容</span></span><br><span class="line">    <span class="attr">skip_search:</span>  <span class="comment"># 指定 path 中的内容不被搜索。</span></span><br><span class="line">  <span class="attr">algolia_search:</span> <span class="comment"># Docsearch https://docsearch.algolia.com/apply/ 申请</span></span><br><span class="line">    <span class="attr">appId:</span> </span><br><span class="line">    <span class="attr">apiKey:</span> </span><br><span class="line">    <span class="attr">indexName:</span> </span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## Comments ########</span></span><br><span class="line"><span class="attr">comments:</span></span><br><span class="line">  <span class="attr">service:</span> <span class="comment"># beaudar, utterances, giscus, twikoo, waline, artalk</span></span><br><span class="line">  <span class="attr">comment_title:</span> <span class="string">快来参与讨论吧~</span></span><br><span class="line">  <span class="attr">lazyload:</span> <span class="literal">false</span> <span class="comment"># true / false</span></span><br><span class="line">  <span class="attr">custom_css:</span> <span class="comment"># artalk,twikoo,... 可以为没有全局启用的评论加载自定义样式</span></span><br><span class="line">  <span class="comment"># beaudar</span></span><br><span class="line">  <span class="comment"># https://beaudar.lipk.org/</span></span><br><span class="line">  <span class="attr">beaudar:</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">xxx/xxx</span></span><br><span class="line">    <span class="attr">issue-term:</span> <span class="string">pathname</span></span><br><span class="line">    <span class="attr">issue-number:</span></span><br><span class="line">    <span class="attr">theme:</span> <span class="string">preferred-color-scheme</span></span><br><span class="line">    <span class="attr">label:</span></span><br><span class="line">    <span class="attr">input-position:</span> <span class="string">top</span> <span class="comment"># top/bottom 评论框位置</span></span><br><span class="line">    <span class="attr">comment-order:</span> <span class="string">desc</span> <span class="comment"># desc 排序</span></span><br><span class="line">    <span class="attr">keep-theme:</span> <span class="comment"># true/false</span></span><br><span class="line">    <span class="attr">loading:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">main</span></span><br><span class="line">  <span class="comment"># utterances</span></span><br><span class="line">  <span class="comment"># https://utteranc.es/</span></span><br><span class="line">  <span class="attr">utterances:</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">xxx/xxx</span></span><br><span class="line">    <span class="attr">issue-term:</span> <span class="string">pathname</span></span><br><span class="line">    <span class="attr">issue-number:</span></span><br><span class="line">    <span class="attr">theme:</span> <span class="string">preferred-color-scheme</span></span><br><span class="line">    <span class="attr">label:</span></span><br><span class="line">  <span class="comment"># giscus</span></span><br><span class="line">  <span class="comment"># https://giscus.app/zh-CN</span></span><br><span class="line">  <span class="attr">giscus:</span></span><br><span class="line">    <span class="attr">src:</span> <span class="string">https://giscus.app/client.js</span></span><br><span class="line">    <span class="attr">data-repo:</span> <span class="string">xxx/xxx</span> <span class="comment"># [在此输入仓库]</span></span><br><span class="line">    <span class="attr">data-repo-id:</span> <span class="comment"># [在此输入仓库 ID]</span></span><br><span class="line">    <span class="attr">data-category:</span> <span class="comment"># [在此输入分类名]</span></span><br><span class="line">    <span class="attr">data-category-id:</span></span><br><span class="line">    <span class="attr">data-mapping:</span> <span class="string">pathname</span></span><br><span class="line">    <span class="attr">data-strict:</span> <span class="number">0</span></span><br><span class="line">    <span class="attr">data-reactions-enabled:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">data-emit-metadata:</span> <span class="number">0</span></span><br><span class="line">    <span class="attr">data-input-position:</span> <span class="string">top</span> <span class="comment"># top, bottom</span></span><br><span class="line">    <span class="attr">data-theme:</span> <span class="string">preferred_color_scheme</span></span><br><span class="line">    <span class="attr">data-lang:</span> <span class="string">zh-CN</span></span><br><span class="line">    <span class="attr">data-loading:</span> <span class="comment"># lazy</span></span><br><span class="line">    <span class="attr">crossorigin:</span> <span class="string">anonymous</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Twikoo</span></span><br><span class="line">  <span class="comment"># https://twikoo.js.org/</span></span><br><span class="line">  <span class="attr">twikoo:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js</span> <span class="comment"># 建议锁定版本</span></span><br><span class="line">    <span class="attr">envId:</span> <span class="string">https://xxx</span> <span class="comment"># vercel函数</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Waline</span></span><br><span class="line">  <span class="comment"># https://waline.js.org/</span></span><br><span class="line">  <span class="attr">waline:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://gcore.jsdelivr.net/npm/@waline/client@3.1/dist/waline.js</span></span><br><span class="line">    <span class="attr">css:</span> <span class="string">https://gcore.jsdelivr.net/npm/@waline/client@3.1/dist/waline.css</span></span><br><span class="line">    <span class="attr">meta_css:</span> <span class="string">https://gcore.jsdelivr.net/npm/@waline/client@3.1/dist/waline-meta.css</span></span><br><span class="line">    <span class="comment"># Waline server address url, you should set this to your own link</span></span><br><span class="line">    <span class="attr">serverURL:</span> <span class="string">https://waline.vercel.app</span></span><br><span class="line">    <span class="comment"># If false, comment count will only be displayed in post page, not in home page</span></span><br><span class="line">    <span class="attr">commentCount:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Pageviews count, <span class="doctag">Note:</span> You should not enable both `waline.pageview` and `leancloud_visitors`.</span></span><br><span class="line">    <span class="attr">pageview:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Custom emoji</span></span><br><span class="line">    <span class="comment"># emoji:</span></span><br><span class="line">    <span class="comment">#   - https://unpkg.com/@waline/emojis@1.1.0/weibo</span></span><br><span class="line">    <span class="comment">#   - https://unpkg.com/@waline/emojis@1.1.0/alus</span></span><br><span class="line">    <span class="comment">#   - https://unpkg.com/@waline/emojis@1.1.0/bilibili</span></span><br><span class="line">    <span class="comment">#   - https://unpkg.com/@waline/emojis@1.1.0/qq</span></span><br><span class="line">    <span class="comment">#   - https://unpkg.com/@waline/emojis@1.1.0/tieba</span></span><br><span class="line">    <span class="comment">#   - https://unpkg.com/@waline/emojis@1.1.0/tw-emoji</span></span><br><span class="line">    <span class="comment">#   - https://unpkg.com/@waline/emojis@1.1.0/bmoji</span></span><br><span class="line">    <span class="comment"># 设置自己的图床服务，替换默认的 Base 64 编码嵌入（有体积大小限制），在评论中上传图片更加方便</span></span><br><span class="line">    <span class="comment"># imageUploader:</span></span><br><span class="line">      <span class="comment"># 适配了兰空图床V1、V2版本</span></span><br><span class="line">      <span class="comment"># 以兰空图床V1为例，下列填写内容为：</span></span><br><span class="line">      <span class="comment"># fileName: file</span></span><br><span class="line">      <span class="comment"># tokenName: Authorization</span></span><br><span class="line">      <span class="comment"># api: https://xxxxxx/api/v1/upload</span></span><br><span class="line">      <span class="comment"># token: Bearer xxxxxxxxxxxxxx</span></span><br><span class="line">      <span class="comment"># resp: data.links.url</span></span><br><span class="line">      <span class="comment"># 以兰空图床V2为例，下列填写内容为：</span></span><br><span class="line">      <span class="comment"># fileName: image</span></span><br><span class="line">      <span class="comment"># tokenName: token</span></span><br><span class="line">      <span class="comment"># api: https://xxxxxx/api/upload</span></span><br><span class="line">      <span class="comment"># token: xxxxxxxxxxxxxx</span></span><br><span class="line">      <span class="comment"># resp: data.url</span></span><br><span class="line">    <span class="comment">#   fileName: # 根据版本二选一</span></span><br><span class="line">    <span class="comment">#   tokenName: # 根据版本二选一</span></span><br><span class="line">    <span class="comment">#   api: # 图床 api 地址</span></span><br><span class="line">    <span class="comment">#   token: # 图床验证</span></span><br><span class="line">    <span class="comment">#   resp: # 图片地址返回值的字段</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Artalk</span></span><br><span class="line">  <span class="comment"># https://artalk.js.org/</span></span><br><span class="line">  <span class="attr">artalk:</span></span><br><span class="line">    <span class="attr">css:</span> <span class="string">https://unpkg.com/artalk@2.9/dist/Artalk.css</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://unpkg.com/artalk@2.9/dist/Artalk.js</span></span><br><span class="line">    <span class="attr">server:</span> <span class="comment"># 后端服务地址</span></span><br><span class="line">    <span class="attr">site:</span> <span class="string">''</span> <span class="comment"># 站点名称</span></span><br><span class="line">    <span class="attr">darkMode:</span> <span class="string">auto</span> <span class="comment"># 其它模式都有问题，慎用，否则后果自负</span></span><br><span class="line">    <span class="attr">fancybox:</span> <span class="literal">true</span> <span class="comment"># 是否为评论区启用 fancybox</span></span><br><span class="line">    <span class="comment"># artalk 有三类图片：1.上传至服务端 2.上传至服务端后利用upgit上传至图床 3.前端上传至图床（本配置为此类）</span></span><br><span class="line">    <span class="comment"># 配置此项时将覆盖服务端上传能力</span></span><br><span class="line">    <span class="attr">imageUploader:</span></span><br><span class="line">      <span class="comment"># 以兰空图床为例，下列填写内容为：</span></span><br><span class="line">      <span class="comment"># api: 'https://xxxxxx/api/v1/upload' # 图床上传地址</span></span><br><span class="line">      <span class="comment"># token: 'Bearer xxxxxxxxxxxxxx' # 图床验证</span></span><br><span class="line">      <span class="comment"># resp: 'data.links.url' # 图片地址返回值的字段</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## Footer ########</span></span><br><span class="line"><span class="attr">footer:</span></span><br><span class="line">  <span class="attr">social:</span></span><br><span class="line">    <span class="comment"># github:</span></span><br><span class="line">    <span class="comment">#   icon: '&lt;img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/&gt;'</span></span><br><span class="line">    <span class="comment">#   url: /</span></span><br><span class="line">    <span class="comment"># music:</span></span><br><span class="line">    <span class="comment">#   icon: '&lt;img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/&gt;'</span></span><br><span class="line">    <span class="comment">#   url: /</span></span><br><span class="line">    <span class="comment"># unsplash:</span></span><br><span class="line">    <span class="comment">#   icon: '&lt;img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3616429.svg"/&gt;'</span></span><br><span class="line">    <span class="comment">#   url: /</span></span><br><span class="line">    <span class="comment"># comments:</span></span><br><span class="line">    <span class="comment">#   icon: '&lt;img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/&gt;'</span></span><br><span class="line">    <span class="comment">#   url: /about/#comments</span></span><br><span class="line">  <span class="attr">sitemap:</span></span><br><span class="line">    <span class="comment"># - title: 博客</span></span><br><span class="line">    <span class="comment">#   items:</span></span><br><span class="line">    <span class="comment">#     - '[近期发布](/)'</span></span><br><span class="line">    <span class="comment">#     - '[分类](/blog/categories/)'</span></span><br><span class="line">    <span class="comment">#     - '[标签](/blog/tags/)'</span></span><br><span class="line">    <span class="comment">#     - '[归档](/blog/archives/)'</span></span><br><span class="line">    <span class="comment"># - title: 项目</span></span><br><span class="line">    <span class="comment">#   items:</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment"># - title: 社交</span></span><br><span class="line">    <span class="comment">#   items:</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment"># - title: 关于</span></span><br><span class="line">    <span class="comment">#   items:</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">    <span class="comment">#     - '[xxx](/)'</span></span><br><span class="line">  <span class="attr">content:</span> <span class="string">|</span> <span class="comment"># 支持 Markdown 格式</span></span><br><span class="line">    <span class="string">本站由</span> [{<span class="string">author.name</span>}]<span class="string">(/)</span> <span class="string">使用</span> [{<span class="string">theme.name</span>} {<span class="string">theme.version</span>}]<span class="string">({theme.tree})</span> <span class="string">主题创建。</span></span><br><span class="line">    <span class="string">本博客所有文章除特别声明外，均采用</span> [<span class="string">CC</span> <span class="string">BY-NC-SA</span> <span class="number">4.0</span>]<span class="string">(https://creativecommons.org/licenses/by-nc-sa/4.0/)</span> <span class="string">许可协议，转载请注明出处。</span></span><br><span class="line">  <span class="comment"># 主题用户越多，开发者维护和更新的积极性就越高，如果您喜欢本主题，请在适当的位置显示主题信息和仓库链接以表支持。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## Tag Plugins ########</span></span><br><span class="line"><span class="attr">tag_plugins:</span></span><br><span class="line">  <span class="comment"># {% box %} / {% note %}</span></span><br><span class="line">  <span class="attr">note:</span></span><br><span class="line">    <span class="attr">default_color:</span> <span class="string">''</span> <span class="comment"># light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error</span></span><br><span class="line">    <span class="attr">border:</span> <span class="literal">true</span> <span class="comment"># true / false</span></span><br><span class="line">  <span class="comment"># {% checkbox %}</span></span><br><span class="line">  <span class="attr">checkbox:</span></span><br><span class="line">    <span class="attr">interactive:</span> <span class="literal">false</span> <span class="comment"># enable interactive for user</span></span><br><span class="line">  <span class="comment"># {% quot %}</span></span><br><span class="line">  <span class="attr">quot:</span></span><br><span class="line">    <span class="attr">default:</span> <span class="comment"># 可以自行配置多种图标方案，支持icons.yml中配置的图片key，也支持直接设置svg/png等文件链接</span></span><br><span class="line">      <span class="attr">prefix:</span> <span class="string">bxs:quote-left</span></span><br><span class="line">      <span class="attr">suffix:</span> <span class="string">bxs:quote-right</span></span><br><span class="line">    <span class="attr">hashtag:</span></span><br><span class="line">      <span class="attr">prefix:</span> <span class="string">solar:hashtag-square-bold</span></span><br><span class="line">    <span class="attr">question:</span></span><br><span class="line">      <span class="attr">prefix:</span> <span class="string">ph:seal-question-fill</span></span><br><span class="line">  <span class="comment"># {% emoji %}</span></span><br><span class="line">  <span class="attr">emoji:</span></span><br><span class="line">    <span class="attr">default:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif</span></span><br><span class="line">    <span class="attr">twemoji:</span> <span class="string">https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg</span></span><br><span class="line">    <span class="attr">qq:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif</span></span><br><span class="line">    <span class="attr">aru:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif</span></span><br><span class="line">    <span class="attr">tieba:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png</span></span><br><span class="line">    <span class="attr">blobcat:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif</span></span><br><span class="line">  <span class="attr">icon:</span></span><br><span class="line">    <span class="comment"># 留空时，图标和文字颜色相同</span></span><br><span class="line">    <span class="attr">default_color:</span> <span class="string">accent</span> <span class="comment"># theme, accent, red, orange, yellow, green, cyan, blue, purple</span></span><br><span class="line">  <span class="comment"># {% button 标题 链接 %}</span></span><br><span class="line">  <span class="attr">button:</span></span><br><span class="line">    <span class="attr">default_color:</span> <span class="string">theme</span> <span class="comment"># theme, accent, red, orange, yellow, green, cyan, blue, purple</span></span><br><span class="line">  <span class="comment"># {% image %}</span></span><br><span class="line">  <span class="attr">image:</span></span><br><span class="line">    <span class="attr">fancybox:</span> <span class="literal">false</span> <span class="comment"># true, false</span></span><br><span class="line">  <span class="comment"># {% copy xxx %}</span></span><br><span class="line">  <span class="attr">copy:</span></span><br><span class="line">    <span class="attr">toast:</span> <span class="string">复制成功</span></span><br><span class="line">  <span class="comment"># {% timeline %}</span></span><br><span class="line">  <span class="attr">timeline:</span></span><br><span class="line">    <span class="attr">max-height:</span> <span class="string">80vh</span></span><br><span class="line">  <span class="comment"># {% mark %}</span></span><br><span class="line">  <span class="attr">mark:</span></span><br><span class="line">    <span class="attr">default_color:</span> <span class="string">yellow</span> <span class="comment"># light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error</span></span><br><span class="line">  <span class="comment"># {% hashtag %}</span></span><br><span class="line">  <span class="attr">hashtag:</span></span><br><span class="line">    <span class="attr">default_color:</span> <span class="comment"># red, orange, yellow, green, cyan, blue, purple</span></span><br><span class="line">  <span class="comment"># {% okr o1 percent:50 status:in_track/at_risk/off_track/finished/unfinished %}</span></span><br><span class="line">  <span class="attr">okr:</span></span><br><span class="line">    <span class="attr">border:</span> <span class="literal">true</span> <span class="comment"># 是否显示边框</span></span><br><span class="line">    <span class="attr">status:</span> <span class="comment"># 可以自行增加</span></span><br><span class="line">      <span class="comment"># 进行中状态</span></span><br><span class="line">      <span class="attr">in_track:</span></span><br><span class="line">        <span class="attr">color:</span> <span class="string">blue</span> <span class="comment"># red, orange, yellow, green, cyan, blue, purple</span></span><br><span class="line">        <span class="attr">label:</span> <span class="string">正常</span></span><br><span class="line">      <span class="attr">at_risk:</span> </span><br><span class="line">        <span class="attr">color:</span> <span class="string">yellow</span></span><br><span class="line">        <span class="attr">label:</span> <span class="string">风险</span></span><br><span class="line">      <span class="attr">off_track:</span></span><br><span class="line">        <span class="attr">color:</span> <span class="string">orange</span></span><br><span class="line">        <span class="attr">label:</span> <span class="string">延期</span></span><br><span class="line">      <span class="comment"># 结果状态</span></span><br><span class="line">      <span class="attr">finished:</span></span><br><span class="line">        <span class="attr">color:</span> <span class="string">green</span></span><br><span class="line">        <span class="attr">label:</span> <span class="string">已完成</span></span><br><span class="line">      <span class="attr">unfinished:</span></span><br><span class="line">        <span class="attr">color:</span> <span class="string">red</span></span><br><span class="line">        <span class="attr">label:</span> <span class="string">未完成</span></span><br><span class="line">  <span class="comment"># {% gallery %}</span></span><br><span class="line">  <span class="attr">gallery:</span></span><br><span class="line">    <span class="attr">layout:</span> <span class="string">grid</span> <span class="comment"># grid / flow</span></span><br><span class="line">    <span class="attr">size:</span> <span class="string">mix</span> <span class="comment"># s / m / l / xl / mix</span></span><br><span class="line">    <span class="attr">ratio:</span> <span class="string">square</span> <span class="comment"># origin / square</span></span><br><span class="line">  <span class="attr">chat:</span></span><br><span class="line">    <span class="attr">api:</span> <span class="string">https://siteinfo.listentothewind.cn/api/v1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 基础依赖</span></span><br><span class="line"><span class="attr">dependencies:</span></span><br><span class="line">  <span class="attr">jquery:</span> <span class="string">https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js</span></span><br><span class="line">  <span class="attr">marked:</span> <span class="string">https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js</span></span><br><span class="line">  <span class="attr">lazyload:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js</span></span><br><span class="line">    <span class="attr">transition:</span> <span class="string">fade</span> <span class="comment"># blur, fade</span></span><br><span class="line">    <span class="attr">fix_ratio:</span> <span class="literal">true</span> <span class="comment"># true / false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）</span></span><br><span class="line"><span class="attr">data_services:</span></span><br><span class="line">  <span class="comment"># 外部 md 渲染</span></span><br><span class="line">  <span class="attr">mdrender:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/mdrender.js</span></span><br><span class="line">  <span class="comment"># 数据填充类</span></span><br><span class="line">  <span class="attr">siteinfo:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/siteinfo.js</span></span><br><span class="line">    <span class="comment"># 设置 api 可以自动提取网页标题、图标，服务部署方法：https://github.com/xaoxuu/site-info-api/</span></span><br><span class="line">    <span class="comment"># 接口测试通过后，把按钮的 href 部分替换成 {href} 之后填写到下方，例如：https://api.xaox.cc/site_info/v1?url={href}</span></span><br><span class="line">    <span class="attr">api:</span> </span><br><span class="line">  <span class="attr">ghinfo:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/ghinfo.js</span></span><br><span class="line">  <span class="comment"># 打分</span></span><br><span class="line">  <span class="attr">rating:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/rating.js</span></span><br><span class="line">    <span class="attr">api:</span> <span class="string">https://star-vote.xaox.cc/api/rating</span></span><br><span class="line">  <span class="comment"># 投票</span></span><br><span class="line">  <span class="attr">vote:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/vote.js</span></span><br><span class="line">    <span class="attr">api:</span> <span class="string">https://star-vote.xaox.cc/api/vote</span></span><br><span class="line">  <span class="comment"># 网格布局类</span></span><br><span class="line">  <span class="attr">sites:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/sites.js</span></span><br><span class="line">  <span class="attr">friends:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/friends.js</span></span><br><span class="line">  <span class="attr">friends_and_posts:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/friends_and_posts.js</span></span><br><span class="line">  <span class="comment"># 列表布局类</span></span><br><span class="line">  <span class="attr">timeline:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/timeline.js</span></span><br><span class="line">  <span class="attr">fcircle:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/fcircle.js</span></span><br><span class="line">  <span class="attr">weibo:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/weibo.js</span></span><br><span class="line">  <span class="attr">memos:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/memos.js</span></span><br><span class="line">  <span class="comment"># chat</span></span><br><span class="line">  <span class="attr">voice:</span> </span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/plugins/voice.js</span></span><br><span class="line">  <span class="attr">video:</span> </span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/plugins/video.js</span></span><br><span class="line">  <span class="attr">download-file:</span> </span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/plugins/download-file.js</span></span><br><span class="line">  <span class="comment"># 最新评论获取类</span></span><br><span class="line">  <span class="attr">twikoo:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/twikoo_latest_comment.js</span></span><br><span class="line">  <span class="attr">waline:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/waline_latest_comment.js</span></span><br><span class="line">  <span class="attr">artalk:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/artalk_latest_comment.js</span></span><br><span class="line">  <span class="attr">giscus:</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/giscus_latest_comment.js</span></span><br><span class="line">  <span class="attr">contributors:</span></span><br><span class="line">    <span class="attr">edit_this_page:</span> <span class="comment"># 从开头开始匹配替换</span></span><br><span class="line">      <span class="attr">'_posts/':</span> <span class="comment"># https://github.com/xaoxuu/xaoxuu.com/blob/main/source/_posts/</span></span><br><span class="line">      <span class="attr">'wiki/stellar/':</span> <span class="string">https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">/js/services/contributors.js</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 扩展插件接入方法：(插件名下面用 #plugin# 代替)</span></span><br><span class="line"><span class="comment"># 1. 在这里增加 #plugin# 配置，至少应含有 enable 字段，默认为空（不启用）</span></span><br><span class="line"><span class="comment"># 2. 新建文件 layout/_plugins/#plugin#.ejs 文件中设置编写加载代码。</span></span><br><span class="line"><span class="comment"># 2.1. 在该文件中可以直接使用 conf 来读取用户在【步骤 1】填写的配置字段内容</span></span><br><span class="line"><span class="comment"># 2.2. 如果需要引入 css 或 js，可以使用 utils.css(xxx)、utils.js(xxx)，具体可参考 layout/_plugins/fancybox.ejs</span></span><br><span class="line"><span class="comment"># 2.3. 如果需要本地 js 文件，请放入 /source/js/plugins 文件夹中，引入方式为：utils.js('/js/plugins/xxx.js');</span></span><br><span class="line"><span class="comment"># 3. 如果这个插件只需要引入外部文件，可以在【步骤 1】处增加 inject 字段，而无需进入【步骤 2】创建 ejs，参考 katex</span></span><br><span class="line"><span class="attr">plugins:</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># preload</span></span><br><span class="line">  <span class="attr">preload:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">service:</span> <span class="string">flying_pages</span> <span class="comment"># flying_pages</span></span><br><span class="line">    <span class="attr">flying_pages:</span> <span class="string">https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># https://fancyapps.com/docs/ui/fancybox/</span></span><br><span class="line">  <span class="comment"># available for {% image xxx %}</span></span><br><span class="line">  <span class="attr">fancybox:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">loader:</span> <span class="string">/js/plugins/fancybox-loader.js</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js</span></span><br><span class="line">    <span class="attr">css:</span> <span class="string">https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css</span></span><br><span class="line">    <span class="comment"># 让 md 语法图片支持放大可以这样写: .md-text img:not([class]), .md-text .image img</span></span><br><span class="line">    <span class="comment"># 可以处理评论区的图片（不支持 iframe 类评论系统）例如：</span></span><br><span class="line">    <span class="comment"># 使用 twikoo 评论可以写: .tk-content img:not([class*="emo"])</span></span><br><span class="line">    <span class="comment"># 使用 waline 评论可以写: #waline_container .vcontent img</span></span><br><span class="line">    <span class="attr">selector:</span> <span class="string">.timenode</span> <span class="string">p&gt;img</span> <span class="comment"># 多个选择器用英文逗号隔开</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># swiper</span></span><br><span class="line">  <span class="attr">swiper:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">css:</span> <span class="string">https://unpkg.com/swiper@10.3/swiper-bundle.min.css</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://unpkg.com/swiper@10.3/swiper-bundle.min.js</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># https://scrollrevealjs.org/api/reveal.html</span></span><br><span class="line">  <span class="attr">scrollreveal:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="comment">#true # 慎用，有些时候打开页面空白</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js</span></span><br><span class="line">    <span class="attr">distance:</span> <span class="string">8px</span></span><br><span class="line">    <span class="attr">duration:</span> <span class="number">500</span> <span class="comment"># ms</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="number">50</span> <span class="comment"># ms</span></span><br><span class="line">    <span class="attr">scale:</span> <span class="number">1</span> <span class="comment"># 0.1~1</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># AI 摘要</span></span><br><span class="line">  <span class="comment"># https://github.com/qxchuckle/Post-Summary-AI</span></span><br><span class="line">  <span class="attr">tianli_gpt:</span> </span><br><span class="line">    <span class="attr">enable:</span> <span class="comment">#true</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://jsd.onmicrosoft.cn/gh/qxchuckle/Post-Summary-AI@6.0/chuckle-post-ai.min.js</span></span><br><span class="line">    <span class="attr">field:</span> <span class="string">post</span> <span class="comment"># all, post, wiki</span></span><br><span class="line">    <span class="attr">key:</span> <span class="string">5Q5mpqRK5DkwT1X9Gi5e</span> <span class="comment"># tianli_gpt key</span></span><br><span class="line">    <span class="attr">total_length:</span> <span class="number">1000</span> <span class="comment"># 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断</span></span><br><span class="line">    <span class="attr">typewriter:</span> <span class="literal">true</span> <span class="comment"># 打字机动画 </span></span><br><span class="line">    <span class="attr">summary_directly:</span> <span class="literal">true</span> <span class="comment"># 是否直接显示摘要，否则显示 AI 简介</span></span><br><span class="line">    <span class="attr">rec_method:</span> <span class="string">all</span> <span class="comment"># all, web # 文章推荐方式，all：匹配数据库内所有文章进行推荐，web：仅当前站内的文章，默认all</span></span><br><span class="line">    <span class="attr">hide_shuttle:</span> <span class="literal">true</span> <span class="comment"># 是否隐藏矩阵穿梭</span></span><br><span class="line">    <span class="attr">summary_toggle:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">interface:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">AI摘要</span></span><br><span class="line">      <span class="attr">introduce:</span> <span class="string">'我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。'</span></span><br><span class="line">      <span class="attr">version:</span> <span class="string">TianliGPT</span></span><br><span class="line">      <span class="attr">button:</span> [<span class="string">"介绍自己"</span>, <span class="string">"推荐文章"</span>, <span class="string">"生成摘要"</span>, <span class="string">"矩阵穿梭"</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Katex - The fastest math typesetting library for the web</span></span><br><span class="line">  <span class="comment"># https://katex.org/docs/autorender.html</span></span><br><span class="line">  <span class="comment"># https://github.com/KaTeX/KaTeX</span></span><br><span class="line">  <span class="comment"># 使用 hexo-renderer-markdown-it-plus 作为公式渲染器：npm uninstall hexo-renderer-marked --save npm install hexo-renderer-markdown-it-plus --save</span></span><br><span class="line">  <span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="comment">#true # hexo-renderer-markdown-it-plus 默认开启 katex，此选项仅用于引入样式</span></span><br><span class="line">    <span class="attr">inject:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      &lt;link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/katex@0.16/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous"&gt;</span></span><br><span class="line"><span class="string"></span>  </span><br><span class="line">  <span class="comment"># MathJax</span></span><br><span class="line">  <span class="comment"># 需在Markdown文件开头加入mathjax: true</span></span><br><span class="line">  <span class="comment"># 推荐使用Pandoc: npm uninstall hexo-renderer-marked --save &amp; npm install hexo-renderer-pandoc --save</span></span><br><span class="line">  <span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">v3:</span> <span class="literal">false</span> <span class="comment"># 若使用 v3，需將 js 設置為 https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="comment"># true # 可以在特定文章的 front-matter 中设置 mathjax: true 来开启，也可以在这里设置全局开启</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Mermaid - markdwon to flow chart, seq chart, class chart ...</span></span><br><span class="line">  <span class="comment"># 需要安装 npm install --save hexo-filter-mermaid-diagrams</span></span><br><span class="line">  <span class="comment"># 使用时 需要在Markdown文件开头加入 mermaid: true</span></span><br><span class="line">  <span class="comment"># 使用示例：</span></span><br><span class="line">  <span class="comment"># &lt;pre class="mermaid"&gt;  # graph LR</span></span><br><span class="line">  <span class="comment">#   A(Section A) --&gt;|option 1| B(Section A)</span></span><br><span class="line">  <span class="comment">#   B --&gt;|option 2| C(Section C)</span></span><br><span class="line">  <span class="comment">#&lt;/pre&gt;</span></span><br><span class="line">  <span class="attr">mermaid:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="comment"># true # 可以在特定文章的 front-matter 中设置 mermaid: true 来开启，也可以在这里设置全局开启</span></span><br><span class="line">    <span class="attr">style_optimization:</span> <span class="literal">false</span> <span class="comment"># use custom style in stellar</span></span><br><span class="line">    <span class="comment"># js: https://unpkg.com/mermaid@9.0.0/dist/mermaid.min.js</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://gcore.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js</span></span><br><span class="line">    <span class="comment"># Available themes: default | dark | forest | neutral</span></span><br><span class="line">    <span class="attr">theme:</span> <span class="string">neutral</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 代码块复制按钮</span></span><br><span class="line">  <span class="attr">copycode:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">default_text:</span> <span class="string">'Copy'</span></span><br><span class="line">    <span class="attr">success_text:</span> <span class="string">'Copied'</span></span><br><span class="line">    <span class="attr">toast:</span> <span class="string">复制成功</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强</span></span><br><span class="line">  <span class="comment"># https://github.com/sivan/heti</span></span><br><span class="line">  <span class="attr">heti:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span> <span class="comment"># 此插件会和代码块冲突，仅适用于纯中文博主。</span></span><br><span class="line">    <span class="attr">css:</span> <span class="string">https://unpkg.com/heti@0.9/umd/heti.min.css</span></span><br><span class="line">    <span class="attr">js:</span> <span class="string">https://unpkg.com/heti@0.9/umd/heti-addon.min.js</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">style:</span></span><br><span class="line">  <span class="attr">prefers_theme:</span> <span class="string">auto</span> <span class="comment"># auto / light / dark</span></span><br><span class="line">  <span class="attr">smooth_scroll:</span> <span class="literal">true</span> <span class="comment"># true / false 开启时如果目录过长可能无法准确定位</span></span><br><span class="line">  <span class="attr">font-size:</span></span><br><span class="line">    <span class="attr">root:</span> <span class="string">16px</span> <span class="comment"># 改这个会影响全局所有文字的字号</span></span><br><span class="line">    <span class="attr">body:</span> <span class="string">17px</span> <span class="comment"># 影响正文区域的字号，如果改成 px 则不受 root 影响</span></span><br><span class="line">    <span class="attr">code:</span> <span class="number">85</span><span class="string">%</span> <span class="comment"># 相较于其所在行的文本大小，建议用百分比</span></span><br><span class="line">    <span class="attr">codeblock:</span> <span class="number">0.</span><span class="string">8125rem</span> <span class="comment"># 13px</span></span><br><span class="line">  <span class="attr">font-family:</span></span><br><span class="line">    <span class="attr">body:</span> <span class="string">'system-ui, "Microsoft Yahei", "Segoe UI", Arial, sans-serif'</span></span><br><span class="line">    <span class="attr">code:</span> <span class="string">'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'</span></span><br><span class="line">    <span class="attr">codeblock:</span> <span class="string">'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'</span></span><br><span class="line">  <span class="attr">text-align:</span> <span class="string">left</span></span><br><span class="line">  <span class="attr">prefix:</span></span><br><span class="line">    <span class="attr">h2:</span> <span class="string">https://api.iconify.design/ci:heading-h2.svg</span></span><br><span class="line">  <span class="attr">border-radius:</span></span><br><span class="line">    <span class="attr">card-l:</span> <span class="string">24px</span> <span class="comment"># 侧边栏、文章横幅位置的圆角</span></span><br><span class="line">    <span class="attr">card:</span> <span class="string">16px</span> <span class="comment"># 文章内大部分卡片的圆角</span></span><br><span class="line">    <span class="attr">card-s:</span> <span class="string">12px</span> <span class="comment"># 文章内小型卡片的圆角</span></span><br><span class="line">    <span class="attr">bar:</span> <span class="string">8px</span> <span class="comment"># 横条类元素的圆角</span></span><br><span class="line">    <span class="attr">image-l:</span> <span class="string">24px</span> <span class="comment"># 非技术类文章插图圆角</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">16px</span> <span class="comment"># 技术类文章插图圆角</span></span><br><span class="line">    <span class="attr">image-s:</span> <span class="string">8px</span> <span class="comment"># 评论区图片圆角（部分评论支持）</span></span><br><span class="line">  <span class="attr">color:</span></span><br><span class="line">    <span class="comment"># 主题色配置（不会根据明暗动态调整，请设置为通用的颜色）</span></span><br><span class="line">    <span class="attr">theme:</span> <span class="string">'hsl(192 98% 55%)'</span> <span class="comment"># 主题色</span></span><br><span class="line">    <span class="attr">accent:</span> <span class="string">'hsl(14 100% 57%)'</span> <span class="comment"># 强调色</span></span><br><span class="line">    <span class="attr">link:</span> <span class="string">'hsl(207 90% 54%)'</span> <span class="comment"># 超链接颜色</span></span><br><span class="line">  <span class="attr">animated_avatar:</span></span><br><span class="line">    <span class="attr">animate:</span> <span class="string">auto</span> <span class="comment"># auto, always</span></span><br><span class="line">    <span class="attr">background:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp</span></span><br><span class="line">  <span class="attr">codeblock:</span></span><br><span class="line">    <span class="attr">scrollbar:</span> <span class="string">4px</span></span><br><span class="line">    <span class="attr">highlightjs_theme:</span> <span class="string">https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css</span></span><br><span class="line">  <span class="attr">loading:</span></span><br><span class="line">    <span class="attr">loading:</span> <span class="string">正在加载</span></span><br><span class="line">    <span class="attr">error:</span> <span class="string">加载失败，请稍后重试。</span></span><br><span class="line">  <span class="attr">gradient:</span> <span class="comment"># https://webgradients.com/</span></span><br><span class="line">    <span class="attr">start:</span> <span class="string">'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'</span></span><br><span class="line">  <span class="attr">leftbar:</span></span><br><span class="line">    <span class="comment"># 可以设置：纯色/渐变色/图片作为背景</span></span><br><span class="line">    <span class="attr">background-color:</span> <span class="string">var(--card)</span> <span class="comment"># var(--block)</span></span><br><span class="line">    <span class="attr">background-image:</span> <span class="string">url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)</span></span><br><span class="line">    <span class="attr">blur-px:</span> <span class="string">100px</span></span><br><span class="line">    <span class="attr">blur-bg:</span> <span class="string">var(--bg-a60)</span></span><br><span class="line">    <span class="attr">background-opacity:</span> <span class="number">0.8</span></span><br><span class="line">  <span class="attr">paginator:</span></span><br><span class="line">    <span class="attr">prev:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/f049bbd4e88ec.svg</span></span><br><span class="line">    <span class="attr">next:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/064b95430caf4.svg</span></span><br><span class="line">  <span class="attr">error_page:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg</span></span><br><span class="line">  <span class="attr">site:</span> <span class="comment"># 使用 background-image 后，blur 设置才有效</span></span><br><span class="line">    <span class="comment"># background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.14/image/site-bg1@small.webp)</span></span><br><span class="line">    <span class="attr">blur-px:</span> <span class="string">100px</span></span><br><span class="line">    <span class="attr">blur-bg:</span> <span class="string">var(--bg-a75)</span></span><br><span class="line">    <span class="attr">blur-sat:</span> <span class="number">300</span><span class="string">%</span></span><br><span class="line">  <span class="comment"># 技术文章内页各级标题前面的符号</span></span><br><span class="line">  <span class="attr">header_prefix:</span></span><br><span class="line">    <span class="attr">h2:</span> <span class="string">'#'</span></span><br><span class="line">    <span class="attr">h3:</span> <span class="string">'='</span></span><br><span class="line">    <span class="attr">h4:</span> <span class="string">'|'</span></span><br><span class="line">    <span class="attr">h5:</span> <span class="string">':'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">default:</span></span><br><span class="line">  <span class="attr">avatar:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg</span></span><br><span class="line">  <span class="attr">link:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg</span></span><br><span class="line">  <span class="attr">cover:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg</span></span><br><span class="line">  <span class="attr">project:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2779789.png</span></span><br><span class="line">  <span class="attr">banner:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/banner/books.jpg</span></span><br><span class="line">  <span class="attr">topic:</span> <span class="string">https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/10433048.png</span></span><br><span class="line">  <span class="attr">loading:</span> <span class="string">https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd</span></span><br><span class="line">  <span class="comment"># loading: https://github.githubassets.com/images/mona-loading-dark.gif</span></span><br><span class="line">  <span class="attr">image_onerror:</span> <span class="string">"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">api_host:</span></span><br><span class="line">  <span class="attr">ghapi:</span> <span class="string">api.github.com</span></span><br><span class="line">  <span class="attr">ghraw:</span> <span class="string">raw.githubusercontent.com</span></span><br><span class="line">  <span class="attr">gist:</span> <span class="string">gist.github.com</span></span><br><span class="line">  <span class="comment"># https://github.com/anuraghazra/github-readme-stats</span></span><br><span class="line">  <span class="attr">ghcard:</span> <span class="string">github-readme-stats.vercel.app</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 非资深hexo开发者尽量不要动这块</span></span><br><span class="line"><span class="attr">system:</span></span><br><span class="line">  <span class="comment"># hexo 支持输出的链接格式众多，维护成本高，为了减少出错，统一成推荐的格式。</span></span><br><span class="line">  <span class="attr">override_pretty_urls:</span> <span class="literal">true</span></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure></div></details>
+
+<h3 id="04-安装Artalk评论系统和Lsky兰空图床"><a href="#04-安装Artalk评论系统和Lsky兰空图床" class="headerlink" title="04. 安装Artalk评论系统和Lsky兰空图床"></a>04. 安装Artalk评论系统和Lsky兰空图床</h3><h5 id="4-1-租赁服务器"><a href="#4-1-租赁服务器" class="headerlink" title="4.1 租赁服务器"></a>4.1 租赁服务器</h5><p>这里我推荐好友<a target="_blank" rel="noopener" href="https://koxiuqiu.cn/">klcdm</a> <a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly84MXgucHJvLw">的VPS租赁商 | 八壹云计算</a>  </p>
+<p>我们这里介绍无ICP备案计划的建站步骤<br>我们需要配置至少为2C2G的服务器，以供我们搭建所需的项目  </p>
+<blockquote>
+<p>③* 本文默认服务器部署环境为Ubuntu22.04 LTS</p>
+</blockquote>
+<h6 id="4-2-安装FinalShell"><a href="#4-2-安装FinalShell" class="headerlink" title="4.2 安装FinalShell"></a>4.2 安装FinalShell</h6><p><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cuaG9zdGJ1Zi5jb20v">FinalShell</a> 是一个开源的SSH终端工具，可以轻松管理远程服务器  </p>
+<ul>
+<li>下载：<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9kbC5ob3N0YnVmLmNvbS9maW5hbHNoZWxsMy9maW5hbHNoZWxsX3dpbmRvd3NfeDY0LmV4ZQ">下载FinalShell</a>  </li>
+<li>安装：无脑下一步即可</li>
+</ul>
+<h5 id="4-3-链接远程服务器"><a href="#4-3-链接远程服务器" class="headerlink" title="4.3 链接远程服务器"></a>4.3 链接远程服务器</h5><p><img src="https://img.xscnet.cn//i/2026/04/03/69cfd6e997a20.png" alt="1"><br>链接类型选择<code>SSH连接(Linux)</code><br>填写服务器的IP地址和端口，用户名和密码，然后点击链接即可  </p>
+<blockquote>
+<p>注意：一些云服务厂商的默认SSH端口可能为随机端口，未声明则为22默认端口  </p>
+</blockquote>
+<p><img src="https://img.xscnet.cn//i/2026/04/03/69cfd7cf078ad.png" alt="2">  </p>
+<h6 id="4-4-安装1Panel"><a href="#4-4-安装1Panel" class="headerlink" title="4.4 安装1Panel"></a>4.4 安装1Panel</h6><blockquote>
+<p>博主喜欢所有程序都放在Docker容器中执行，以保护主机，个人习惯，所以本文使用1Panel  </p>
+</blockquote>
+<ul>
+<li>安装：安装<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly8xcGFuZWwuY24v">1Panel</a></li>
+</ul>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -c <span class="string">"<span class="subst">$(curl -sSL https://resource.fit2cloud.com/1panel/package/v2/quick_start.sh)</span>"</span></span><br></pre></td></tr></tbody></table></figure>
+<ul>
+<li>配置：在安装过程中需要手动设置<code>安全入口</code>，<code>用户名</code>，<code>密码(在您输入密码时候不会显示)</code></li>
+</ul>
+<h5 id="4-5-配置Docker"><a href="#4-5-配置Docker" class="headerlink" title="4.5 配置Docker"></a>4.5 配置Docker</h5><p>登录进入1Panel管理面板，依次选择[左侧]容器 -&gt; [上方]配置 -&gt; 全部配置<br>将下方配置复制进代码框内，点击保存即可  </p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"registry-mirrors"</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">"https://hub.rat.dev"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">"https://docker.1panel.live"</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"log-driver"</span><span class="punctuation">:</span> <span class="string">"json-file"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"log-opts"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"max-size"</span><span class="punctuation">:</span> <span class="string">"10m"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"max-file"</span><span class="punctuation">:</span> <span class="string">"3"</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h5 id="4-6-安装mariadb数据库"><a href="#4-6-安装mariadb数据库" class="headerlink" title="4.6 安装mariadb数据库"></a>4.6 安装mariadb数据库</h5><p><strong>MariaDB 是由 MySQL 原始创始人发起的分支，旨在完全替代 MySQL，并保持高度兼容。</strong> 它的核心差异在于<strong>更开放、激进的迭代策略</strong>，提供了比 MySQL 更多的<strong>存储引擎</strong>（如列式存储ColumnStore、MyRocks）和<strong>新特性</strong>（如原生向量支持、多源复制）。目前主流 Linux 发行版（如 RHEL、Ubuntu）已默认用 MariaDB 替换了 MySQL。</p>
+<p><strong>关于资源占用与性能，两者各有侧重：</strong> <strong>默认情况下，MariaDB 因启用 Aria 引擎和线程池，内存占用略高于 MySQL。</strong> 但得益于其<strong>线程池</strong>技术，它在处理<strong>高并发</strong>连接时性能下降曲线更平缓，且官方宣称在低并发负载下比 MySQL 快 13%-36%。如果你需要从 MySQL 迁移，通常直接卸载安装即可，但要注意 JSON 字段的存储逻辑和 GTID 复制协议存在不兼容。</p>
+<blockquote>
+<p>以上内容由AI生成，请注意判断  </p>
+</blockquote>
+<ul>
+<li><p>安装MariaDB:<br>登录1Panel管理面板，依次选择[左侧]应用商店 -&gt; [上方]数据库 -&gt; 选择MariaDB -&gt; 点击安装  </p>
+</li>
+<li><p>在安装配置页面：<br>名称等配置保持不变，切记<strong>关闭</strong>端口外部访问，否则可能会有被攻击风险，访问端口默认3306即可<br><img src="https://img.xscnet.cn//i/2026/04/04/69cfe4334a40e.png"></p>
+</li>
+</ul>
+<h5 id="4-7-安装NPM-NginxProxyManager"><a href="#4-7-安装NPM-NginxProxyManager" class="headerlink" title="4.7 安装NPM(NginxProxyManager)"></a>4.7 安装NPM(NginxProxyManager)</h5><p><strong>Nginx Proxy Manager（简称 NPM）是一个开源的、带 Web 可视化管理界面的反向代理工具，本质上是给 Nginx 套上了一层“图形化外壳”。</strong> 它的核心价值在于<strong>彻底告别手动编辑复杂的 Nginx 配置文件</strong>，你只需要在浏览器里填写域名、目标 IP 和端口，它就会自动生成配置。最大的亮点是<strong>内置了 Let’s Encrypt 免费 SSL 证书的申请与自动续期功能</strong>，点几下鼠标就能给网站配上 HTTPS，特别适合不熟悉 Nginx 命令行的开发者、运维小白或需要快速部署多个 Docker 服务的小团队。  </p>
+<p><strong>相比直接操作 Nginx 配置文件，NPM 的优势在于“简单直观”，但代价是“灵活性有所降低”</strong>：一些特别复杂的 Nginx 高级规则可能需要额外通过“Advanced”选项卡手动补充。资源占用方面，因为 NPM 包含 Web 界面、数据库并基于 Docker 运行，<strong>默认内存占用会略高于纯命令行 Nginx</strong>。如果部署后觉得资源消耗偏高，可以通过限制 Worker 进程数量、调整连接数和配置代理缓存等方式进行优化。  </p>
+<blockquote>
+<p>以上内容由AI生成，请注意判断  </p>
+</blockquote>
+<ul>
+<li><p>安装NPM：<br>登录1Panel管理面板，依次选择[左侧]应用商店 -&gt; [上方]Web服务器 -&gt; 选择Nginx Proxy Manager -&gt; 点击安装 </p>
+</li>
+<li><p>在安装配置页面：<br>名称等配置保持不变，<strong>注意：需要修改<code>HTTP端口</code>,<code>控制台端口</code>,<code>HTTPS端口</code>分别为<code>80</code>,<code>81</code>,<code>443</code>,需要<code>开启</code>端口外部访问</strong><br><img src="https://img.xscnet.cn//i/2026/04/04/69cfe43358235.png">  </p>
+</li>
+<li><p>安装完成后：<br>浏览器输入 http://服务器IP:81 进入NPM后台，默认用户名密码 <a href="mailto:admin@example.com">admin@example.com</a> / changeme</p>
+</li>
+</ul>
+<p>进入后会要求你修改用户邮箱与密码，按提示修改即可  </p>
+<h5 id="4-8-安装Lsky图床"><a href="#4-8-安装Lsky图床" class="headerlink" title="4.8 安装Lsky图床"></a>4.8 安装Lsky图床</h5><ul>
+<li><p>安装Lsky:<br>登录1Panel管理面板，依次选择[左侧]应用商店 -&gt; [上方]云存储 -&gt; 选择Lsky-pro -&gt; 点击安装 </p>
+</li>
+<li><p>在安装配置页面：<br>名称等配置保持不变，<strong>需要<code>开启</code>端口外部访问</strong><br><img src="https://img.xscnet.cn//i/2026/04/04/69cfe433468b3.png">  </p>
+</li>
+<li><p>安装完成后：<br>浏览器输入 http://服务器IP:40027 进入Lsky-pro后台  </p>
+<blockquote>
+<p>具体配置细节请查看视频教程</p>
+</blockquote>
+</li>
+</ul>
+<h5 id="4-9-安装Artalk评论系统"><a href="#4-9-安装Artalk评论系统" class="headerlink" title="4.9 安装Artalk评论系统"></a>4.9 安装Artalk评论系统</h5><ul>
+<li><p>安装Artalk:<br>登录1Panel管理面板，依次选择[左侧]应用商店 -&gt; [上方]实用工具 -&gt; 选择Artalk -&gt; 点击安装  </p>
+</li>
+<li><p>在安装界面:<br>需要修改博客名称和博客地址，<strong>需要<code>开启</code>端口外部访问</strong><br><img src="https://img.xscnet.cn//i/2026/04/04/69cfe4331bcf4.png">   </p>
+</li>
+<li><p>安装完成后：<br>浏览器输入 http://服务器IP:23366 进入Artalk后台  </p>
+<blockquote>
+<p>具体配置细节请查看视频教程<br>此处配置极为复杂，强烈建议查看视频教程</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="05-博客配置Artalk和lsky图床"><a href="#05-博客配置Artalk和lsky图床" class="headerlink" title="05. 博客配置Artalk和lsky图床"></a>05. 博客配置Artalk和lsky图床</h3><ol>
+<li>使用VSCode打开<code>_config.stellar.yml</code>文件  </li>
+<li>找到<code>comments</code>字段，找到<code>artalk</code>字段(约在314行左右)，修改如下内容</li>
+</ol>
+<figure class="highlight yml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">artalk:</span></span><br><span class="line">  <span class="attr">css:</span> <span class="string">https://unpkg.com/artalk@2.9/dist/Artalk.css</span></span><br><span class="line">  <span class="attr">js:</span> <span class="string">https://unpkg.com/artalk@2.9/dist/Artalk.js</span></span><br><span class="line">  <span class="attr">server:</span>  <span class="comment"># 后端服务地址</span></span><br><span class="line">  <span class="attr">site:</span> <span class="string">''</span> <span class="comment"># 站点名称（此处为刚才创建应用时候的站点名称）</span></span><br><span class="line">  <span class="attr">darkMode:</span> <span class="string">auto</span> <span class="comment"># 其它模式都有问题，慎用，否则后果自负</span></span><br><span class="line">  <span class="attr">fancybox:</span> <span class="literal">true</span> <span class="comment"># 是否为评论区启用 fancybox</span></span><br><span class="line">  <span class="comment"># artalk 有三类图片：1.上传至服务端 2.上传至服务端后利用upgit上传至图床 3.前端上传至图床（本配置为此类）</span></span><br><span class="line">  <span class="comment"># 配置此项时将覆盖服务端上传能力</span></span><br><span class="line">  <span class="attr">imageUploader:</span></span><br><span class="line">    <span class="comment"># 以兰空图床为例，下列填写内容为：</span></span><br><span class="line">    <span class="attr">api:</span> <span class="string">'https://xxxxxx/api/v1/upload'</span> <span class="comment"># 图床上传地址</span></span><br><span class="line">    <span class="attr">token:</span> <span class="string">'Bearer xxxxxxxxxxxxxx'</span> <span class="comment"># 图床验证</span></span><br><span class="line">    <span class="attr">resp:</span> <span class="string">'data.links.url'</span> <span class="comment"># 图片地址返回值的字段</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="06-添加友链页面："><a href="#06-添加友链页面：" class="headerlink" title="06. 添加友链页面："></a>06. 添加友链页面：</h3><p><strong>建议同步查看<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly94YW94dXUuY29tL3dpa2kvc3RlbGxhci90YWctcGx1Z2lucy9kYXRhLyNmcmllbmRzLSVFNSU4RiU4QiVFOSU5MyVCRQ">原作者xaoxuu对于友链的解释页面</a></strong>  </p>
+<ol>
+<li>创建 <code>.\source\links\index.md</code> 文件，并添加如下内容：</li>
+</ol>
+<figure class="highlight md"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 我的小伙伴们</span><br><span class="line">date: 2077/12/30</span><br><span class="line">update: 2077/12/30</span><br><span class="line">keywords: 链接</span><br><span class="line"><span class="section">description: 小伙伴们</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line">可以一起交换友链！  </span><br><span class="line">想交好多好多的博友们！  </span><br><span class="line"></span><br><span class="line">{% friends posts:true api:你需要修改为你的API地址 %}</span><br><span class="line"></span><br><span class="line"><span class="strong">**申请前须知**</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> 本站友链均为动态友链，页面加载后通过请求接口渲染出友链数据。</span><br><span class="line"><span class="bullet">-</span> 本站友链按最新一篇文章发布时间倒序排序，越活跃的博主就越靠前。</span><br><span class="line"><span class="bullet">-</span> 没有 feed 链接的可能会排在最后。</span><br><span class="line"><span class="bullet">-</span> 本站仅定期解析 feed 地址，不会爬取其它地址。</span><br><span class="line"></span><br><span class="line"><span class="strong">**自助友链申请流程**</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> 确保符合<span class="strong">**安全合规**</span>的硬性条件，且不会对本站进行高频爬取。</span><br><span class="line"><span class="bullet">2.</span> 提交友链意向申请，如实填写。（此时不必提前添加本站为友链）</span><br><span class="line"><span class="bullet">3.</span> 完成友链任务，未完成的不要随意勾选。（如果迟迟没有通过审核，请检查 issue 中列出的任务是否完成。）</span><br><span class="line"><span class="bullet">4.</span> 博主审核通过，此时请及时添加本站友链。</span><br><span class="line"></span><br><span class="line"><span class="strong">**提交完成后可以到此板块下方留言，这样可以有助于您提交的友链接更快的通过审核**</span>  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;我的友链:  </span><br><span class="line"><span class="bullet">-</span>   "url": "",  </span><br><span class="line"><span class="code">    "avatar": "",  </span></span><br><span class="line"><span class="code">    "title": "",    </span></span><br><span class="line"><span class="code">    "description": "",  </span></span><br><span class="line"><span class="code">    "snapshot": ""  </span></span><br><span class="line"><span class="code">    "feed": ""   </span></span><br><span class="line"><span class="code"></span></span><br><span class="line">如果我的网站有什么不好的地方，还请您多多担待，指出我的错误我会及时修改的~  </span><br><span class="line">填写你的友链信息，我审核通过后会在网站展示你的友链~  </span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="2">
+<li><p>搭建API服务<br>进入作者的仓库: <a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9naXRodWIuY29tL3hhb3h1dS9mcmllbmRz">xaoxuu/friends</a><br>点击Fork按钮，创建自己的仓库 ,记得打开 github action 的运行权限  </p>
+</li>
+<li><p>修改<code>index.md</code>中的API地址为Github仓库OutPut分支的地址</p>
+</li>
+</ol>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>这篇文章写作的初衷，是方便更多的新人朋友加入到我们博客圈大家庭<br>让大家相信，在各大平台兴起、信息愈发碎片化的当下，这个看似渐渐淡出人们视野的圈子里，依然有许多人在默默为爱发电<br>用 Hexo 搭建起一方属于自己的小天地，从来都不是一件复杂又遥远的事<br>它无关流量与热度，不必迎合算法与潮流，只是安安静静记录思考、分享热爱、留存时光<br>愿每一位愿意提笔、愿意搭建、愿意坚守的朋友，都能在这里找到同频的伙伴，让文字有归处，让热爱有回响<br>也期待越来越多新鲜的面孔加入进来，一起守护这份纯粹与真诚，让小小的博客世界，永远温暖、永远鲜活  、</p>
+</article>
+<div class="article-footer">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+
+</div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/p3420260329/">博客源站IP泄露的两种主要方式与防护指南</a></div></section></div>
+
+
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class="header cmt-title cap theme">
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class="body cmt-body artalk">
+      
+
+<div class="artalk with-fancybox" id="artalk_container"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap" style="column-count:4;"><div class="sitemap-group"><span class="fs15">博客</span><a href="/links/">友链</a><a href="/about/">AboutMe</a><a href="/atom.xml">订阅RSS</a><a target="_blank" rel="noopener" href="https://valaxy.xscnet.cn/">旧框架Valaxy</a></div><div class="sitemap-group"><span class="fs15">其他服务</span><a target="_blank" rel="noopener" href="https://img.xscnet.cn/">流云图库</a><a target="_blank" rel="noopener" href="https://uptime.xscnet.cn/status/mete0r">服务监控</a><a target="_blank" rel="noopener" href="https://nz.xscnas.top/">哪吒面板</a><a target="_blank" rel="noopener" href="https://talk.xscnet.cn/">碎碎念Ech0</a></div><div class="sitemap-group"><span class="fs15">社交</span><a target="_blank" rel="noopener" href="https://blogscn.fun/"><img src="https://photo.xiangming.site/img/blogscn.png" width="88.1px" height="14px" alt="笔墨迹" style="border-radius:8px;"></a><a target="_blank" rel="noopener" href="https://www.foreverblog.cn/go.html"><img src="https://img.xscnet.cn//i/2025/07/16/687738ebb74df.gif" width="49.7px" height="14px" alt="十年之约" style="border-radius:8px;"></a><a target="_blank" rel="noopener" href="https://www.travellings.cn/go-by-clouds.html"><img src="https://www.travellings.cn/assets/logo.gif" width="56px" height="14px" alt="开往" style="border-radius:0px;"></a><a target="_blank" rel="noopener" href="https://travel.moe/go.html"><img src="https://travel.moe/images/logo/pink.png" width="85.4px" height="14px" alt="异次元之旅" style="border-radius:8px;"></a></div><div class="sitemap-group"><span class="fs15">关于</span><a href="/site/">本站简介</a><a href="/privacy/">隐私政策</a></div></div><div class="text"><p><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" style="color: orange;">吉ICP备2025026吉551号-2</a><br>本站由 <a href="/">Mete0r</a> 使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9naXRodWIuY29tL3hhb3h1dS9oZXhvLXRoZW1lLXN0ZWxsYXIvdHJlZS8xLjMzLjE">Stellar 1.33.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9pY3AuZ292Lm1vZS8_a2V5d29yZD0yMDI1MDQxMA" style="color: pink;">萌备20250410号</a><br><a href="https://blogscn.fun/" title="BLOGS·CN" target="_blank"><img src="https://photo.xiangming.site/img/blogscn.png" alt="本站已加入BLOGS·CN" style="width:auto;height:15px;"></a></p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B"><span class="toc-text">视频教程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hexo%E6%A1%86%E6%9E%B6-%E2%91%A0"><span class="toc-text">Hexo框架 *①</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#01-%E5%AE%89%E8%A3%85%E6%A0%B8%E5%BF%83%E5%B7%A5%E5%85%B7NodeJS%E5%92%8CGit"><span class="toc-text">01.安装核心工具NodeJS和Git</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4"><span class="toc-text">操作步骤:</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-%E5%AE%89%E8%A3%85-Node-js"><span class="toc-text">1.1 .安装 Node.js</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-2-%E5%AE%89%E8%A3%85-Git"><span class="toc-text">1.2 .安装 Git</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-3-%E6%A3%80%E6%9F%A5%E5%AE%89%E8%A3%85%E7%8A%B6%E6%80%81"><span class="toc-text">1.3. 检查安装状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#02-%E5%AE%89%E8%A3%85Hexo%E5%8D%9A%E5%AE%A2%E6%A1%86%E6%9E%B6"><span class="toc-text">02.安装Hexo博客框架</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E5%AE%89%E8%A3%85Hexo"><span class="toc-text">2.1. 安装Hexo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E5%88%9B%E5%BB%BA%E5%8D%9A%E5%AE%A2%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-text">2.2. 创建博客本地开发环境文件夹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-%E4%B8%8B%E8%BD%BD%E4%BD%A0%E5%96%9C%E6%AC%A2%E7%9A%84%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98"><span class="toc-text">2.3. 下载你喜欢的博客主题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#03-%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98%E5%B9%B6%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">03. 安装主题并修改配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98"><span class="toc-text">3.1. 安装主题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">3.2. 修改配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-1-%E4%B8%8B%E8%BD%BDVSCode-The-open-source-AI-code-edito"><span class="toc-text">3.2.1. 下载VSCode | The open source AI code edito</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-2-%E6%9B%B4%E6%94%B9VSCode%E8%AF%AD%E8%A8%80%E4%B8%BA%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87"><span class="toc-text">3.2.2. 更改VSCode语言为简体中文</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-3-%E4%BF%AE%E6%94%B9Hexo%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">3.2.3. 修改Hexo配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-4-%E9%85%8D%E7%BD%AE%E4%B8%BB%E9%A2%98"><span class="toc-text">3.2.4. 配置主题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#04-%E5%AE%89%E8%A3%85Artalk%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%92%8CLsky%E5%85%B0%E7%A9%BA%E5%9B%BE%E5%BA%8A"><span class="toc-text">04. 安装Artalk评论系统和Lsky兰空图床</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#4-1-%E7%A7%9F%E8%B5%81%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">4.1 租赁服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#4-2-%E5%AE%89%E8%A3%85FinalShell"><span class="toc-text">4.2 安装FinalShell</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-3-%E9%93%BE%E6%8E%A5%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">4.3 链接远程服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#4-4-%E5%AE%89%E8%A3%851Panel"><span class="toc-text">4.4 安装1Panel</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-5-%E9%85%8D%E7%BD%AEDocker"><span class="toc-text">4.5 配置Docker</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-6-%E5%AE%89%E8%A3%85mariadb%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">4.6 安装mariadb数据库</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-7-%E5%AE%89%E8%A3%85NPM-NginxProxyManager"><span class="toc-text">4.7 安装NPM(NginxProxyManager)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-8-%E5%AE%89%E8%A3%85Lsky%E5%9B%BE%E5%BA%8A"><span class="toc-text">4.8 安装Lsky图床</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-9-%E5%AE%89%E8%A3%85Artalk%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F"><span class="toc-text">4.9 安装Artalk评论系统</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#05-%E5%8D%9A%E5%AE%A2%E9%85%8D%E7%BD%AEArtalk%E5%92%8Clsky%E5%9B%BE%E5%BA%8A"><span class="toc-text">05. 博客配置Artalk和lsky图床</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#06-%E6%B7%BB%E5%8A%A0%E5%8F%8B%E9%93%BE%E9%A1%B5%E9%9D%A2%EF%BC%9A"><span class="toc-text">06. 添加友链页面：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-text">结语</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"></path><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"></path></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"></path></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class="float-panel">
+  <button type="button" style="display:none" class="laptop-only rightbar-toggle mobile" onclick="sidebar.rightbar()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
+  </button>
+  <button type="button" style="display:none" class="mobile-only leftbar-toggle mobile" onclick="sidebar.leftbar()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"></path><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"></path></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":null,"officialHosts":["localhost","www.xscnet.cn"],"encoded":""};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
+    marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async="" src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer=""></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  const el = document.getElementById('artalk_container');
+  util.viewportLazyload(el, load_artalk, true);
+
+  function load_artalk() {
+    if (!el) return;
+    utils.css('https://unpkg.com/artalk@2.9/dist/Artalk.css');
+    utils.js('https://unpkg.com/artalk@2.9/dist/Artalk.js', {defer: true}).then(function () {
+      // 监听 Artalk 事件
+      // FIXME: Artalk开启了懒加载会导致评论输入预览框里的图也变成data-src，导致看不到图
+      // Artalk.use((ctx) => {
+      //   ctx.on('list-loaded', () => window.lazyLoadInstance?.update())
+      // })
+      const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
+      const artalk = Artalk.init({
+        el: '#artalk_container',
+        pageKey: path,
+        pageTitle: '使用Hexo搭建自己的博客',
+        server: 'https://artalk.xscnet.cn/',
+        site: 'Mete0rBlog',
+        darkMode: 'auto',
+        
+        imgUploader: function(file) {
+          let headers = new Headers();
+          headers.set('Accept', 'application/json');
+          
+            headers.set('Authorization', 'Bearer 1|dnM43Cha9V481cSNSyUjMOrRMk3hiAwV0L210Aat')
+          
+          let formData = new FormData();
+          formData.append('file', file);
+          return fetch('https://img.xscnet.cn/api/v1/upload',{
+            method: 'POST',
+            body: formData,
+            headers: headers
+            }).then((resp) => resp.json())
+              .then((resp) => resp.data.links.url)
+          },
+        
+      });
+    });
+  }
+</script>
+
+
+
+<script defer="">
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":"https://sinfo.xscnas.top/api/v1?url={href}"},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer="" src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script defer="" type="text/javascript" src="https://gcore.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    var mermaid_config = {
+      startOnLoad: true,
+      theme:
+        "auto" == "auto" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "neutral",
+      logLevel: 3,
+      themeVariables: {
+        darkMode: true
+      },
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true,
+        curve: "linear"
+      },
+      gantt: {
+        axisFormat: "%Y/%m/%d"
+      },
+      sequence: {
+        actorMargin: 50
+      }
+    }
+    mermaid.initialize(mermaid_config);
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div><!-- hexo injector body_end start --><script>// LivePhoto类，管理单个Live Photo的行为
+class LivePhoto {
+  constructor(container, config) {
+    this.container = container;
+    this.staticImage = container.querySelector(".live-photo-static");
+    this.video = container.querySelector(".live-photo-video");
+    this.config = config;
+    this.hasAutoPlayed = false;
+    this.isPlaying = false;
+    this.hoverTimeout = null;
+    this.isWeixin = this.detectWeixinBrowser();
+
+    // 在微信环境中调整配置
+    if (this.isWeixin && this.config.weixin_disable_autoplay) {
+      this.config.autoplay = false;
+
+      // 修改微信环境下的badge
+      this.modifyWeixinBadge();
+    }
+
+    // 绑定事件
+    this.bindEvents();
+  }
+
+  // 检测微信浏览器
+  detectWeixinBrowser() {
+    const ua = navigator.userAgent.toLowerCase();
+    return ua.includes("micromessenger");
+  }
+
+  // 修改微信环境下的badge
+  modifyWeixinBadge() {
+    let badge = this.container.querySelector(".live-badge");
+
+    // 如果没有badge，创建一个
+    if (!badge && this.config.badge) {
+      badge = document.createElement("div");
+      badge.className = `live-badge ${
+        this.config.badge_position || "bottom-left"
+      }`;
+      this.container.appendChild(badge);
+    }
+
+    // 修改badge内容和样式
+    if (badge) {
+      if(!this.config.badge_text) {
+        badge.innerHTML = "点击播放";
+      } else{
+        badge.innerHTML = this.config.badge_text + " | 点击播放";
+      }
+    }
+  }
+
+  // 绑定事件
+  bindEvents() {
+    // 桌面端：鼠标悬停播放
+    if (this.config.hover_to_play) {
+      this.container.addEventListener("mouseenter", () =>
+        this.handleHoverStart()
+      );
+      this.container.addEventListener("mouseleave", () =>
+        this.handleHoverEnd()
+      );
+    }
+
+    // 点击事件 - 在微信环境中这是主要的交互方式
+    if (this.config.click_to_play) {
+      this.container.addEventListener("click", (e) => {
+        this.play();
+      });
+    }
+
+    // 监听视频结束事件
+    this.video.addEventListener("ended", () => this.stop());
+
+    // 监听视频加载事件
+    this.video.addEventListener("loadstart", () => this.showLoading());
+    this.video.addEventListener("canplay", () => this.hideLoading());
+    this.video.addEventListener("error", () => this.hideLoading());
+  }
+
+  // 处理悬停开始
+  handleHoverStart() {
+    // 清除之前的超时
+    if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+
+    // 设置延迟播放
+    this.hoverTimeout = setTimeout(() => {
+      this.play();
+    }, this.config.hover_delay || 300);
+  }
+
+  // 处理悬停结束
+  handleHoverEnd() {
+    // 清除悬停超时
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+      this.hoverTimeout = null;
+    }
+
+    // 如果视频正在播放，不停止（让它播放完）
+  }
+
+  // 显示加载指示器
+  showLoading() {
+    let loadingEl = this.container.querySelector(".live-loading");
+    if (!loadingEl && this.config.loading_animation) {
+      loadingEl = document.createElement("div");
+      loadingEl.className = "live-loading";
+      this.container.appendChild(loadingEl);
+    }
+    if (loadingEl) {
+      loadingEl.style.display = "block";
+    }
+  }
+
+  // 隐藏加载指示器
+  hideLoading() {
+    const loadingEl = this.container.querySelector(".live-loading");
+    if (loadingEl) {
+      loadingEl.style.display = "none";
+    }
+  }
+
+  // 播放视频
+  play() {
+    if (this.isPlaying) return;
+
+    this.isPlaying = true;
+    this.staticImage.style.opacity = 0;
+    this.video.classList.add("playing");
+    if (this.video.readyState < 3) { // HAVE_FUTURE_DATA
+      this.showLoading();
+    }
+
+    // 播放视频
+    const playPromise = this.video.play();
+
+    if (playPromise !== undefined) {
+      playPromise.catch((error) => {
+        console.error("视频播放失败:", error);
+        this.hideLoading();
+        this.isPlaying = false;
+      });
+    }
+  }
+
+  // 停止播放
+  stop() {
+    this.video.classList.remove("playing");
+    this.staticImage.style.opacity = 1;
+    this.isPlaying = false;
+    this.hideLoading();
+  }
+
+  // 自动播放（当进入视口时）
+  autoPlay() {
+    if (!this.hasAutoPlayed && this.config.autoplay) {
+      this.hasAutoPlayed = true;
+      this.play();
+    }
+  }
+}
+
+// 页面主控制器
+class LivePhotoPage {
+  constructor(config) {
+    this.config = config;
+    this.livePhotos = [];
+    this.observer = null;
+
+    this.init();
+  }
+
+  // 初始化
+  init() {
+    this.detectLivePhotos();
+
+    // 检测是否为微信环境
+    const isWeixin = navigator.userAgent
+      .toLowerCase()
+      .includes("micromessenger");
+
+    // 如果在微信环境中且禁用自动播放，则不设置Intersection Observer
+    if (isWeixin && this.config.weixin_disable_autoplay) {
+      return;
+    }
+
+    // 如果启用懒加载，设置Intersection Observer
+    if (this.config.lazy_load) {
+      this.setupIntersectionObserver();
+    } else if (this.config.autoplay) {
+      // 如果不使用懒加载，直接自动播放所有
+      this.livePhotos.forEach((livePhoto) => livePhoto.autoPlay());
+    }
+  }
+
+  // 检测页面中的所有Live Photo容器
+  detectLivePhotos() {
+    const containers = document.querySelectorAll(".live-photo-container");
+
+    containers.forEach((container) => {
+      // 检查是否已经初始化过
+      if (!container.dataset.initialized) {
+        const livePhoto = new LivePhoto(container, this.config);
+        this.livePhotos.push(livePhoto);
+        container.dataset.initialized = "true";
+      }
+    });
+  }
+
+  // 设置Intersection Observer
+  setupIntersectionObserver() {
+    // 如果已有observer，先断开所有观察
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+
+    // 创建新的observer
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // 找到对应的LivePhoto实例
+            const container = entry.target;
+            const livePhoto = this.livePhotos.find(
+              (lp) => lp.container === container
+            );
+
+            if (livePhoto) {
+              livePhoto.autoPlay();
+
+              // 如果不需要持续观察，可以取消观察
+              if (!this.config.keep_observing) {
+                this.observer.unobserve(container);
+              }
+            }
+          }
+        });
+      },
+      {
+        threshold: this.config.threshold,
+        rootMargin: "0px 0px 10% 0px", // 底部提前10%触发
+      }
+    );
+
+    // 开始观察所有Live Photo容器
+    this.livePhotos.forEach((livePhoto) => {
+      this.observer.observe(livePhoto.container);
+    });
+  }
+}
+
+// 当DOM加载完成后初始化
+document.addEventListener("DOMContentLoaded", function () {
+  if (window.LivePhotoConfig && window.LivePhotoConfig.enable) {
+    window.livePhotoPage = new LivePhotoPage(window.LivePhotoConfig);
+  }
+});
+</script><!-- hexo injector body_end end -->
+</body></html>
