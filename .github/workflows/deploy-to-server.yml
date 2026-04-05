@@ -52,3 +52,18 @@ jobs:
           target: "/home/blog/dist"   # 直接放到dist目录下
           strip_components: 1         # 去掉deploy_dist这一层
           rm: false                   # 因为我们已经手动清空了，这里不用再rm
+
+      # 6. 刷新腾讯云 EdgeOne 缓存（目录刷新）
+      - name: Purge EdgeOne Cache
+        uses: tencentcloud/tencentcloud-cli-action@main
+        env:
+          TENCENTCLOUD_SECRET_ID: ${{ secrets.EO_SECRET_ID }}
+          TENCENTCLOUD_SECRET_KEY: ${{ secrets.EO_SECRET_KEY }}
+        with:
+          args: |
+            tccli teo CreatePurgeTask \
+              --cli-unfold-argument \
+              --ZoneId ${{ secrets.EO_ZONE_ID }} \
+              --Type "purge_prefix" \
+              --Method "invalidate" \
+              --Targets "https://www.xscnet.cn/"
