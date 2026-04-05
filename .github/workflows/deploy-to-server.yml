@@ -1,4 +1,4 @@
-name: Deploy to Aliyun Server
+name: Deploy to Aliyun Server and Purge EO Cache
 
 on:
   push:
@@ -8,25 +8,27 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
+      # 1. 拉取代码
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
+      # 2. 添加服务器到 known_hosts
       - name: Add server to known_hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-      
+
+      # 3. 准备本地文件
       - name: Prepare files locally
         run: |
-          # 创建dist目录
           mkdir -p ./deploy_dist
-          # 将所有文件（除了.git和.github）复制到deploy_dist
           rsync -av --exclude='.git' --exclude='.github' --exclude='deploy_dist' ./ ./deploy_dist/
           echo "✅ 文件已准备到 ./deploy_dist 目录："
           ls -la ./deploy_dist/
-      
+
+      # 4. 清理远程目录
       - name: Clean remote directory
         uses: appleboy/ssh-action@v0.1.5
         with:
@@ -34,36 +36,37 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # 确保/home/blog存在
             mkdir -p /home/blog
-            # 彻底删除旧的dist（如果有）
             rm -rf /home/blog/dist
-            # 创建新的空dist目录
             mkdir -p /home/blog/dist
             echo "✅ /home/blog/dist 已清空重建"
-      
+
+      # 5. 部署到服务器
       - name: Deploy to server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "./deploy_dist/*"  # 上传deploy_dist目录下的所有内容
-          target: "/home/blog/dist"   # 直接放到dist目录下
-          strip_components: 1         # 去掉deploy_dist这一层
-          rm: false                   # 因为我们已经手动清空了，这里不用再rm
+          source: "./deploy_dist/*"
+          target: "/home/blog/dist"
+          strip_components: 1
+          rm: false
 
-      # 6. 刷新腾讯云 EdgeOne 缓存（目录刷新）
-      - name: Purge EdgeOne Cache
-        uses: tencentcloud/tencentcloud-cli-action@main
+      # 6. 刷新腾讯云 EdgeOne 缓存（使用官方 CLI）
+      - name: Install Tencent Cloud CLI
+        run: pip install tccli
+
+      - name: Configure and Purge EdgeOne Cache
         env:
           TENCENTCLOUD_SECRET_ID: ${{ secrets.EO_SECRET_ID }}
           TENCENTCLOUD_SECRET_KEY: ${{ secrets.EO_SECRET_KEY }}
-        with:
-          args: |
-            tccli teo CreatePurgeTask \
-              --cli-unfold-argument \
-              --ZoneId ${{ secrets.EO_ZONE_ID }} \
-              --Type "purge_prefix" \
-              --Method "invalidate" \
-              --Targets "https://www.xscnet.cn/"
+        run: |
+          tccli configure set secretId $TENCENTCLOUD_SECRET_ID
+          tccli configure set secretKey $TENCENTCLOUD_SECRET_KEY
+          tccli configure set region ap-guangzhou
+          tccli teo CreatePurgeTask \
+            --ZoneId ${{ secrets.EO_ZONE_ID }} \
+            --Type purge_prefix \
+            --Method invalidate \
+            --Targets '["https://www.xscnet.cn/"]'
