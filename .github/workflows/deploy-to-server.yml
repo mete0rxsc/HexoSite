@@ -69,4 +69,4 @@ jobs:
             --ZoneId ${{ secrets.EO_ZONE_ID }} \
             --Type purge_prefix \
             --Method invalidate \
-            --Targets '["https://www.xscnet.cn/"]'
+            --Targets '["${{ secrets.EO_DOMAIN }}"]'
