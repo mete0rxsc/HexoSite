@@ -995,8 +995,8 @@
 
   function load_artalk() {
     if (!el) return;
-    utils.css('https://res.xscnet.cn/Artalk/Artalk@2.9.1.css');
-    utils.js('https://res.xscnet.cn/Artalk/Artalk@2.9.1.js', {defer: true}).then(function () {
+    utils.css('https://unpkg.com/artalk@2.9.1/dist/Artalk.css');
+    utils.js('https://unpkg.com/artalk@2.9.1/dist/Artalk.js', {defer: true}).then(function () {
       // 监听 Artalk 事件
       // FIXME: Artalk开启了懒加载会导致评论输入预览框里的图也变成data-src，导致看不到图
       // Artalk.use((ctx) => {
