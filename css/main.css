@@ -34,19 +34,19 @@
   --gap-max: calc(var(--gap-margin) + var(--gap-padding));
 }
 :root {
-  --hue: 225.78947368421052deg;
-  --sat: 32.20338983050848%;
-  --light: 23.137254901960784%;
+  --hue: 120deg;
+  --sat: 12.8%;
+  --light: 55.6%;
   --alpha: 1;
   --theme: hsla(var(--hue) var(--sat) var(--light) / 1);
   --theme-a10: hsla(var(--hue) var(--sat) var(--light) / 0.1);
   --theme-a20: hsla(var(--hue) var(--sat) var(--light) / 0.2);
   --theme-a30: hsla(var(--hue) var(--sat) var(--light) / 0.3);
-  --accent: #a1feef;
-  --link: hsla(222.51968503937007deg 70.16574585635361% 64.50980392156863% / 1);
-  --link-a20: hsla(222.51968503937007deg 70.16574585635361% 64.50980392156863% / 0.2);
+  --accent: #d3f2de;
+  --link: hsla(127deg 25.9% 76.7% / 1);
+  --link-a20: hsla(127deg 25.9% 76.7% / 0.2);
   --background: hsla(210deg 20% 98% / 1);
-  --card: #fff;
+  --card: rgba(255,255,255,0.5);
   --bg-a20: hsla(210deg 0% 100% / 0.2);
   --bg-a50: hsla(210deg 0% 100% / 0.5);
   --bg-a60: hsla(210deg 0% 100% / 0.6);
@@ -68,7 +68,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: hsla(210deg 8% 12% / 1);
-    --card: hsla(210deg 10% 24% / 1);
+    --card: rgba(255,255,255,0.25);
     --bg-a20: hsla(210deg 0% 0% / 0.2);
     --bg-a50: hsla(210deg 0% 0% / 0.5);
     --bg-a60: hsla(210deg 0% 0% / 0.6);
@@ -96,7 +96,7 @@
 }
 :root[data-theme="light"] {
   --background: hsla(210deg 20% 98% / 1);
-  --card: #fff;
+  --card: rgba(255,255,255,0.5);
   --bg-a20: hsla(210deg 0% 100% / 0.2);
   --bg-a50: hsla(210deg 0% 100% / 0.5);
   --bg-a60: hsla(210deg 0% 100% / 0.6);
@@ -117,7 +117,7 @@
 }
 :root[data-theme="dark"] {
   --background: hsla(210deg 8% 12% / 1);
-  --card: hsla(210deg 10% 24% / 1);
+  --card: rgba(255,255,255,0.25);
   --bg-a20: hsla(210deg 0% 0% / 0.2);
   --bg-a50: hsla(210deg 0% 0% / 0.5);
   --bg-a60: hsla(210deg 0% 0% / 0.6);
@@ -333,50 +333,50 @@
   --link-a20: hsla(291.24087591240874deg 95% 32% / 0.2);
 }
 .colorful[color='theme'] {
-  --hue: 225.78947368421052deg;
-  --sat: 32.20338983050848%;
-  --light: 23.137254901960784%;
+  --hue: 120deg;
+  --sat: 12.8%;
+  --light: 55.6%;
   --alpha: 1;
   --theme: hsla(var(--hue) var(--sat) var(--light) / 1);
   --theme-a10: hsla(var(--hue) var(--sat) var(--light) / 0.1);
   --theme-a20: hsla(var(--hue) var(--sat) var(--light) / 0.2);
   --theme-a30: hsla(var(--hue) var(--sat) var(--light) / 0.3);
-  --link: hsla(225.78947368421052deg 32.20338983050848% 23.137254901960784% / 1);
-  --link-a20: hsla(225.78947368421052deg 32.20338983050848% 23.137254901960784% / 0.2);
-  --theme-border: hsla(225.78947368421052deg 50% 80% / var(--alpha));
-  --theme-block: hsla(225.78947368421052deg 90% 92% / var(--alpha));
-  --theme-mark: hsla(225.78947368421052deg 95% 80% / var(--alpha));
-  --theme-codeblock: hsla(225.78947368421052deg 50% 95% / var(--alpha));
-  --text: hsla(225.78947368421052deg 55% 16% / 1);
-  --text-p1: hsla(225.78947368421052deg 90% 20% / 1);
-  --text-p2: hsla(225.78947368421052deg 90% 20% / 0.8);
-  --text-p3: hsla(225.78947368421052deg 90% 20% / 0.6);
-  --text-p4: hsla(225.78947368421052deg 90% 20% / 0.4);
-  --link: hsla(225.78947368421052deg 95% 32% / 1);
-  --link-a20: hsla(225.78947368421052deg 95% 32% / 0.2);
+  --link: hsla(120deg 12.8% 55.6% / 1);
+  --link-a20: hsla(120deg 12.8% 55.6% / 0.2);
+  --theme-border: hsla(120deg 50% 80% / var(--alpha));
+  --theme-block: hsla(120deg 90% 92% / var(--alpha));
+  --theme-mark: hsla(120deg 95% 80% / var(--alpha));
+  --theme-codeblock: hsla(120deg 50% 95% / var(--alpha));
+  --text: hsla(120deg 55% 16% / 1);
+  --text-p1: hsla(120deg 90% 20% / 1);
+  --text-p2: hsla(120deg 90% 20% / 0.8);
+  --text-p3: hsla(120deg 90% 20% / 0.6);
+  --text-p4: hsla(120deg 90% 20% / 0.4);
+  --link: hsla(120deg 95% 32% / 1);
+  --link-a20: hsla(120deg 95% 32% / 0.2);
 }
 .colorful[color='accent'] {
-  --hue: 170.32258064516128deg;
-  --sat: 97.89473684210527%;
-  --light: 81.37254901960785%;
+  --hue: 141deg;
+  --sat: 54.4%;
+  --light: 88.8%;
   --alpha: 1;
   --theme: hsla(var(--hue) var(--sat) var(--light) / 1);
   --theme-a10: hsla(var(--hue) var(--sat) var(--light) / 0.1);
   --theme-a20: hsla(var(--hue) var(--sat) var(--light) / 0.2);
   --theme-a30: hsla(var(--hue) var(--sat) var(--light) / 0.3);
-  --link: hsla(170.32258064516128deg 97.89473684210527% 81.37254901960785% / 1);
-  --link-a20: hsla(170.32258064516128deg 97.89473684210527% 81.37254901960785% / 0.2);
-  --theme-border: hsla(170.32258064516128deg 50% 80% / var(--alpha));
-  --theme-block: hsla(170.32258064516128deg 90% 92% / var(--alpha));
-  --theme-mark: hsla(170.32258064516128deg 95% 80% / var(--alpha));
-  --theme-codeblock: hsla(170.32258064516128deg 50% 95% / var(--alpha));
-  --text: hsla(170.32258064516128deg 55% 16% / 1);
-  --text-p1: hsla(170.32258064516128deg 90% 20% / 1);
-  --text-p2: hsla(170.32258064516128deg 90% 20% / 0.8);
-  --text-p3: hsla(170.32258064516128deg 90% 20% / 0.6);
-  --text-p4: hsla(170.32258064516128deg 90% 20% / 0.4);
-  --link: hsla(170.32258064516128deg 95% 32% / 1);
-  --link-a20: hsla(170.32258064516128deg 95% 32% / 0.2);
+  --link: hsla(141deg 54.4% 88.8% / 1);
+  --link-a20: hsla(141deg 54.4% 88.8% / 0.2);
+  --theme-border: hsla(141deg 50% 80% / var(--alpha));
+  --theme-block: hsla(141deg 90% 92% / var(--alpha));
+  --theme-mark: hsla(141deg 95% 80% / var(--alpha));
+  --theme-codeblock: hsla(141deg 50% 95% / var(--alpha));
+  --text: hsla(141deg 55% 16% / 1);
+  --text-p1: hsla(141deg 90% 20% / 1);
+  --text-p2: hsla(141deg 90% 20% / 0.8);
+  --text-p3: hsla(141deg 90% 20% / 0.6);
+  --text-p4: hsla(141deg 90% 20% / 0.4);
+  --link: hsla(141deg 95% 32% / 1);
+  --link-a20: hsla(141deg 95% 32% / 0.2);
 }
 .colorful[color='light'] {
   --theme: #fff;
@@ -384,7 +384,7 @@
   --theme-mark: var(--theme);
   --theme-codeblock: var(--theme);
   --background: hsla(210deg 20% 98% / 1);
-  --card: #fff;
+  --card: rgba(255,255,255,0.5);
   --bg-a20: hsla(210deg 0% 100% / 0.2);
   --bg-a50: hsla(210deg 0% 100% / 0.5);
   --bg-a60: hsla(210deg 0% 100% / 0.6);
@@ -405,7 +405,7 @@
 }
 .colorful[color='dark'] {
   --background: hsla(210deg 8% 12% / 1);
-  --card: hsla(210deg 10% 24% / 1);
+  --card: rgba(255,255,255,0.25);
   --bg-a20: hsla(210deg 0% 0% / 0.2);
   --bg-a50: hsla(210deg 0% 0% / 0.5);
   --bg-a60: hsla(210deg 0% 0% / 0.6);
@@ -458,7 +458,7 @@
   --link: hsla(50.96385542168675deg 95% 32% / 1);
   --link-a20: hsla(50.96385542168675deg 95% 32% / 0.2);
   --background: hsla(210deg 20% 98% / 1);
-  --card: #fff;
+  --card: rgba(255,255,255,0.5);
   --bg-a20: hsla(210deg 0% 100% / 0.2);
   --bg-a50: hsla(210deg 0% 100% / 0.5);
   --bg-a60: hsla(210deg 0% 100% / 0.6);
@@ -505,7 +505,7 @@
   --link: hsla(4.105263157894738deg 80% 60% / 1);
   --link-a20: hsla(4.105263157894738deg 80% 60% / 0.2);
   --background: hsla(210deg 8% 12% / 1);
-  --card: hsla(210deg 10% 24% / 1);
+  --card: rgba(255,255,255,0.25);
   --bg-a20: hsla(210deg 0% 0% / 0.2);
   --bg-a50: hsla(210deg 0% 0% / 0.5);
   --bg-a60: hsla(210deg 0% 0% / 0.6);
@@ -536,27 +536,27 @@
   }
 }
 :root[data-theme="dark"] .tag-plugin.tag {
-  --hue: 225.78947368421052deg;
-  --sat: 32.20338983050848%;
-  --light: 23.137254901960784%;
+  --hue: 120deg;
+  --sat: 12.8%;
+  --light: 55.6%;
   --alpha: 1;
   --theme: hsla(var(--hue) var(--sat) var(--light) / 1);
   --theme-a10: hsla(var(--hue) var(--sat) var(--light) / 0.1);
   --theme-a20: hsla(var(--hue) var(--sat) var(--light) / 0.2);
   --theme-a30: hsla(var(--hue) var(--sat) var(--light) / 0.3);
-  --link: hsla(225.78947368421052deg 32.20338983050848% 23.137254901960784% / 1);
-  --link-a20: hsla(225.78947368421052deg 32.20338983050848% 23.137254901960784% / 0.2);
-  --theme-border: hsla(225.78947368421052deg 40% 24% / var(--alpha));
-  --theme-block: hsla(225.78947368421052deg 24% 24% / var(--alpha));
-  --theme-mark: hsla(225.78947368421052deg 24% 24% / var(--alpha));
-  --theme-codeblock: hsla(225.78947368421052deg 12% 24% / var(--alpha));
-  --text: hsla(225.78947368421052deg 50% 75% / 1);
-  --text-p1: hsla(225.78947368421052deg 80% 80% / 1);
-  --text-p2: hsla(225.78947368421052deg 80% 80% / 0.8);
-  --text-p3: hsla(225.78947368421052deg 80% 80% / 0.6);
-  --text-p4: hsla(225.78947368421052deg 80% 80% / 0.4);
-  --link: hsla(225.78947368421052deg 80% 60% / 1);
-  --link-a20: hsla(225.78947368421052deg 80% 60% / 0.2);
+  --link: hsla(120deg 12.8% 55.6% / 1);
+  --link-a20: hsla(120deg 12.8% 55.6% / 0.2);
+  --theme-border: hsla(120deg 40% 24% / var(--alpha));
+  --theme-block: hsla(120deg 24% 24% / var(--alpha));
+  --theme-mark: hsla(120deg 24% 24% / var(--alpha));
+  --theme-codeblock: hsla(120deg 12% 24% / var(--alpha));
+  --text: hsla(120deg 50% 75% / 1);
+  --text-p1: hsla(120deg 80% 80% / 1);
+  --text-p2: hsla(120deg 80% 80% / 0.8);
+  --text-p3: hsla(120deg 80% 80% / 0.6);
+  --text-p4: hsla(120deg 80% 80% / 0.4);
+  --link: hsla(120deg 80% 60% / 1);
+  --link-a20: hsla(120deg 80% 60% / 0.2);
 }
 :root[data-theme="dark"] .colorful[color='red'] {
   --hue: 4.105263157894738deg;
@@ -744,27 +744,27 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) .tag-plugin.tag {
-    --hue: 225.78947368421052deg;
-    --sat: 32.20338983050848%;
-    --light: 23.137254901960784%;
+    --hue: 120deg;
+    --sat: 12.8%;
+    --light: 55.6%;
     --alpha: 1;
     --theme: hsla(var(--hue) var(--sat) var(--light) / 1);
     --theme-a10: hsla(var(--hue) var(--sat) var(--light) / 0.1);
     --theme-a20: hsla(var(--hue) var(--sat) var(--light) / 0.2);
     --theme-a30: hsla(var(--hue) var(--sat) var(--light) / 0.3);
-    --link: hsla(225.78947368421052deg 32.20338983050848% 23.137254901960784% / 1);
-    --link-a20: hsla(225.78947368421052deg 32.20338983050848% 23.137254901960784% / 0.2);
-    --theme-border: hsla(225.78947368421052deg 40% 24% / var(--alpha));
-    --theme-block: hsla(225.78947368421052deg 24% 24% / var(--alpha));
-    --theme-mark: hsla(225.78947368421052deg 24% 24% / var(--alpha));
-    --theme-codeblock: hsla(225.78947368421052deg 12% 24% / var(--alpha));
-    --text: hsla(225.78947368421052deg 50% 75% / 1);
-    --text-p1: hsla(225.78947368421052deg 80% 80% / 1);
-    --text-p2: hsla(225.78947368421052deg 80% 80% / 0.8);
-    --text-p3: hsla(225.78947368421052deg 80% 80% / 0.6);
-    --text-p4: hsla(225.78947368421052deg 80% 80% / 0.4);
-    --link: hsla(225.78947368421052deg 80% 60% / 1);
-    --link-a20: hsla(225.78947368421052deg 80% 60% / 0.2);
+    --link: hsla(120deg 12.8% 55.6% / 1);
+    --link-a20: hsla(120deg 12.8% 55.6% / 0.2);
+    --theme-border: hsla(120deg 40% 24% / var(--alpha));
+    --theme-block: hsla(120deg 24% 24% / var(--alpha));
+    --theme-mark: hsla(120deg 24% 24% / var(--alpha));
+    --theme-codeblock: hsla(120deg 12% 24% / var(--alpha));
+    --text: hsla(120deg 50% 75% / 1);
+    --text-p1: hsla(120deg 80% 80% / 1);
+    --text-p2: hsla(120deg 80% 80% / 0.8);
+    --text-p3: hsla(120deg 80% 80% / 0.6);
+    --text-p4: hsla(120deg 80% 80% / 0.4);
+    --link: hsla(120deg 80% 60% / 1);
+    --link-a20: hsla(120deg 80% 60% / 0.2);
   }
   :root:not([data-theme]) .colorful[color='red'] {
     --hue: 4.105263157894738deg;
@@ -7857,11 +7857,6 @@ details.toc[open] >div.body section .header+.doc_tree {
   background: var(--block);
   border-radius: 4px;
 }
-@media screen and (min-width: 1180px) {
-  .widget-wrapper.toc {
-    background: var(--background);
-  }
-}
 .widget-wrapper.toc .toc {
   --fsp: calc(17px - 2px);
   padding: 0;
@@ -8397,7 +8392,7 @@ details.toc[open] >div.body section .header+.doc_tree {
   display: inline-block;
   width: 12px;
   height: 1.2em;
-  background: #a1feef;
+  background: #d3f2de;
   transform: skewX(-20deg);
   margin: 0 0.5em;
   vertical-align: top;
@@ -9218,6 +9213,7 @@ body>.sitebg {
   right: 0;
   bottom: 0;
   background-size: cover;
+  background-image: linear-gradient(100deg, #f2d7ea);
 }
 body>.sitebg .siteblur {
   width: 100%;
@@ -9225,8 +9221,8 @@ body>.sitebg .siteblur {
   --blur-px: 0;
   --blur-sat: 200%;
   background-color: var(--blur-bg);
-  --blur-sat: 300%;
-  --blur-px: 100px;
+  --blur-sat: 100%;
+  --blur-px: 2px;
   --blur-bg: var(--bg-a75);
 }
 @supports ((-webkit-backdrop-filter: blur(var(--blur-px))) or (backdrop-filter: blur(var(--blur-px)))) {
@@ -9962,7 +9958,7 @@ a[data-fancybox] {
   --at-color-sub: var(--text-p3);
   --at-color-grey: var(--text-p4);
   --at-color-meta: var(--text-p4);
-  --at-color-border: var(--block-border);
+  --at-color-border: transparent;
   --at-color-light: var(--link);
   --at-color-bg: var(--card);
   --at-color-bg-transl: var(--card);

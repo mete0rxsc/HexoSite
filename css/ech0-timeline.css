@@ -1,0 +1,392 @@
+/* Ech0 Timeline 样式 - 纯透明毛玻璃 */
+
+/* 重置所有背景 */
+.tag-plugin.timeline,
+.tag-plugin.timeline .widget-body,
+.timeline-ech0-container,
+.timeline-ech0-container .timeline-item,
+.timeline-ech0-container .timeline-box {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* 毛玻璃卡片 - 纯透明 */
+.timeline-ech0-container .timeline-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-radius: 24px !important;
+  padding: 20px 24px !important;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.timeline-ech0-container .timeline-card:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* 暗色主题 - 纯透明 */
+[data-theme="dark"] .timeline-ech0-container .timeline-card {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .timeline-ech0-container .timeline-card:hover {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* 卡片内时间样式 - 深色文字（白天模式） */
+.timeline-ech0-container .timeline-card-time {
+  font-size: 13px;
+  color: #666 !important;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeline-ech0-container .timeline-card-time::before {
+  content: '📅';
+  font-size: 13px;
+}
+
+/* 暗色主题 - 时间文字变浅 */
+[data-theme="dark"] .timeline-ech0-container .timeline-card-time {
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 卡片内容文字 - 深色（白天模式） */
+.timeline-ech0-container .timeline-card-body {
+  line-height: 1.7;
+  font-size: 0.95rem;
+  color: #333 !important;
+}
+
+.timeline-ech0-container .timeline-text-content {
+  word-wrap: break-word;
+  color: #333 !important;
+}
+
+.timeline-ech0-container .timeline-text-content code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-family: 'Consolas', monospace;
+  font-size: 0.85em;
+  color: #e83e8c;
+}
+
+/* 暗色主题 - 文字变浅色 */
+[data-theme="dark"] .timeline-ech0-container .timeline-card-body {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-theme="dark"] .timeline-ech0-container .timeline-text-content {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-theme="dark"] .timeline-ech0-container .timeline-text-content code {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ff6b9d;
+}
+
+/* 卡片底部 */
+.timeline-ech0-container .timeline-card-footer {
+  margin-top: 14px;
+  padding-top: 10px;
+  text-align: right;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .timeline-ech0-container .timeline-card-footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.timeline-ech0-container .timeline-readmore {
+  font-size: 13px;
+  color: #4a90e2 !important;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.2s;
+}
+
+.timeline-ech0-container .timeline-readmore:hover {
+  color: #2b6cb0 !important;
+  gap: 10px;
+  text-decoration: underline;
+}
+
+[data-theme="dark"] .timeline-ech0-container .timeline-readmore {
+  color: #6bb5ff !important;
+}
+
+[data-theme="dark"] .timeline-ech0-container .timeline-readmore:hover {
+  color: #8ec5ff !important;
+}
+
+/* 视频嵌入 */
+.timeline-ech0-container .timeline-video-embed {
+  margin: 14px 0;
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.timeline-ech0-container .timeline-video-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* 外部链接 */
+.timeline-ech0-container .timeline-external-link {
+  margin: 14px 0;
+}
+
+.timeline-ech0-container .external-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.timeline-ech0-container .external-link:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .timeline-ech0-container .external-link {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .timeline-ech0-container .external-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.timeline-ech0-container .external-link-left {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.timeline-ech0-container .external-link-right {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timeline-ech0-container .external-link-title {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+[data-theme="dark"] .timeline-ech0-container .external-link-title {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 轮播图 */
+.timeline-ech0-container .timeline-carousel {
+  margin: 14px 0;
+  position: relative;
+}
+
+.timeline-ech0-container .carousel-slide {
+  display: none;
+  position: relative;
+}
+
+.timeline-ech0-container .carousel-slide.active {
+  display: block;
+}
+
+.timeline-ech0-container .carousel-slide img {
+  width: 100%;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+/* LivePhoto 样式 */
+.timeline-ech0-container .carousel-slide.has-live {
+  position: relative;
+}
+
+.timeline-ech0-container .live-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 2;
+}
+
+.timeline-ech0-container .live-icon {
+  width: 14px;
+  height: 14px;
+  fill: #ff4444;
+}
+
+.timeline-ech0-container .live-badge span {
+  color: #ff4444;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.timeline-ech0-container .live-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* 轮播图按钮 */
+.timeline-ech0-container .carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.2s;
+  z-index: 10;
+}
+
+.timeline-ech0-container .carousel-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.timeline-ech0-container .prev-btn {
+  left: 12px;
+}
+
+.timeline-ech0-container .next-btn {
+  right: 12px;
+}
+
+.timeline-ech0-container .carousel-indicators {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.timeline-ech0-container .indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.timeline-ech0-container .indicator.active {
+  background: white;
+  width: 20px;
+  border-radius: 4px;
+}
+
+/* 音乐播放器 */
+.timeline-ech0-container .timeline-music {
+  margin: 14px 0;
+}
+
+.timeline-ech0-container .timeline-music audio {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* 状态样式 */
+.timeline-ech0-container .timeline-loading,
+.timeline-ech0-container .timeline-empty,
+.timeline-ech0-container .timeline-error {
+  text-align: center;
+  padding: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  color: #666;
+}
+
+[data-theme="dark"] .timeline-ech0-container .timeline-loading,
+[data-theme="dark"] .timeline-ech0-container .timeline-empty,
+[data-theme="dark"] .timeline-ech0-container .timeline-error {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .timeline-ech0-container .timeline-card {
+    padding: 15px 18px !important;
+  }
+  
+  .timeline-ech0-container .carousel-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+  
+  .timeline-ech0-container .prev-btn {
+    left: 8px;
+  }
+  
+  .timeline-ech0-container .next-btn {
+    right: 8px;
+  }
+}
+
+/* 缩放整个容器 */
+.timeline-ech0-container {
+  transform: scale(0.9);
+  transform-origin: top center;  /* 从顶部中心开始缩放 */
+}
+
+.timeline-ech0-container .timeline-card {
+  background: rgba(255, 255, 255, 0.05) !important;  /* 只有5%白色 */
+  backdrop-filter: blur(20px) !important;
+}
