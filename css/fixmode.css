@@ -1,0 +1,34 @@
+/* 只修复 leftbar 容器在 data-theme="dark" 时的背景 */
+html[data-theme="dark"] .l_left .leftbar-container:before {
+  background: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: inset 0 0 32px 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 确保伪元素 after 在移动端也不受影响（只改背景，不改颜色） */
+@media screen and (max-width: 667px) {
+  html[data-theme="dark"] .l_left .leftbar-container:after {
+    background: rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+/* 修复TopBar异常发光 */
+
+.navbar-blur {
+    text-shadow:0 0 2px rgba(0,0,0,.2),0 0 4px rgba(0,0,0,.4)
+}
+
+.navbar-blur nav a:not(.active,.navbar-blur:hover) {
+    filter:none
+}
+
+.navbar-blur:before {
+    background:rgba(255,255,255,.2)
+}
+
+.navbar-blur:after {
+    box-shadow:inset 0 0 2px 1px rgba(255,255,255,.2)
+}
+
+.navbar nav a.active {
+    background:rgba(255,255,255,.25)
+}
