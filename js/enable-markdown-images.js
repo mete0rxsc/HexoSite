@@ -42,28 +42,58 @@
 
         // 如果 fancybox 已经加载，重新绑定事件
         if (typeof $ !== 'undefined' && $.fancybox) {
-            $('[data-fancybox="gallery"]').fancybox();
+            $('[data-fancybox="gallery"]').fancybox({
+                animationDuration: 366,
+                loop: true,
+                protect: true
+            });
+        }
+    }
+
+    // 检查图片和fancybox是否都已加载完成
+    function checkAndEnableMarkdownImages() {
+        const container = document.querySelector('article.md-text.content');
+        if (!container) {
+            // 如果没有容器，稍后重试
+            setTimeout(checkAndEnableMarkdownImages, 100);
+            return;
+        }
+
+        const images = container.querySelectorAll('img');
+        const allImagesLoaded = Array.from(images).every(img => img.complete || img.naturalWidth > 0);
+
+        // 检查 jQuery 和 fancybox 是否可用
+        const isFancyboxReady = typeof $ !== 'undefined' && typeof $.fancybox !== 'undefined';
+
+        if (allImagesLoaded && isFancyboxReady) {
+            // 所有条件满足，执行功能
+            enableMarkdownImages();
+        } else {
+            // 继续等待
+            setTimeout(checkAndEnableMarkdownImages, 100);
         }
     }
 
     // 等待页面完全加载完成
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () {
-            // 稍微延迟确保所有内容都已渲染
-            setTimeout(enableMarkdownImages, 100);
+            // 开始检查并启用功能
+            checkAndEnableMarkdownImages();
         });
     } else {
-        // 页面已经加载完成
-        setTimeout(enableMarkdownImages, 100);
+        // 页面已经加载完成，开始检查
+        checkAndEnableMarkdownImages();
     }
 
     // 如果是通过 PJAX 或类似技术加载的内容，可能需要额外的监听
     // 如果主题使用了 PJAX，可以取消下面的注释
     /*
     if (typeof $(document) !== 'undefined') {
-        $(document).on('pjax:complete', function() {
-            setTimeout(enableMarkdownImages, 100);
+        $(document).on('pjax:complete', function () {
+            // PJAX 完成后重新检查和启用
+            setTimeout(checkAndEnableMarkdownImages, 100);
         });
     }
-    */
+        */
+
 })();
