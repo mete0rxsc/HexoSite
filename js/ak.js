@@ -76,7 +76,7 @@ class EmojiEnlarge {
         popupImg.src = img.src;
         popupImg.width = width;
         popupImg.height = height;
-        popupAlt.textContent = img.alt || '图片窗预览';
+        popupAlt.textContent = img.alt || ' ';
 
         // 设置位置（鼠标右下角，避免超出屏幕）
         const gap = 10;
