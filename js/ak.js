@@ -59,7 +59,7 @@ class EmojiEnlarge {
   handleMouseOver(e) {
     // 仅鼠标触发，排除触屏/触控笔
     if (e.pointerType !== 'mouse') return;
-    
+
     const target = e.target;
     // 判断是否为表情包图片
     if (!target.matches(this.config.emojiSelector)) return;
@@ -76,7 +76,7 @@ class EmojiEnlarge {
     popupImg.src = img.src;
     popupImg.width = width;
     popupImg.height = height;
-    popupAlt.textContent = img.getAttribute('atk-emoticon') || img.alt || '小窗预览';
+    popupAlt.textContent = img.getAttribute('atk-emoticon') || img.alt || '好康的头像~';
 
     // 设置位置（鼠标右下角，避免超出屏幕）
     const gap = 10;
