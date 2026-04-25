@@ -13,3 +13,13 @@ document.addEventListener('click', function (e) {
         owo.remove()
     }, 1500)
 })
+
+// 测试方案1：禁用图片点击，让事件穿透到父元素
+const style = document.createElement('style');
+style.textContent = `
+  .atk-grp .atk-item img {
+    pointer-events: none !important;
+  }
+`;
+document.head.appendChild(style);
+console.log('✅ 已禁用表情包图片的点击事件，现在点击图片区域会穿透到父元素');
