@@ -314,29 +314,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>博客源站IP泄露的两种主要方式与防护指南 - -Mete0r's Blog | 壹人小站-</title>
+  <title>AI导致的乱象以及个人形象与大家的初次见面 - -Mete0r's Blog | 壹人小站-</title>
 
   
-    <meta name="description" content="源站IP泄露是博客安全中常见但容易被忽视的问题。本文结合实际案例，详细分析了邮件推送和TLS/SSL证书两种泄露源站IP的典型途径，包括其原理、成因以及具体排查方式。同时，文章提供了使用阿里云邮件推送服务、关闭源站Web端口、配置默认假证书等实用的防护方案，帮助博主在不影响正常功能的前提下有效隐藏源站IP，提升网站整体安全性。">
+    <meta name="description" content="五一假期临近高考，分享日常备考与学习感悟，结合瑞文推理测验实测发现过度依赖AI会造成推理能力下滑，从独立思考、主观能动性、专注力、认知卸载四方面剖析AI滥用带来的大脑与认知乱象，引用多份权威资料佐证危害，谈及算法碎片化信息侵蚀思维，同时公布个人虚拟形象流星同学正式登场，博客小幅优化细节Bug，立下戒过度依赖AI、回归自主思考学习的决心。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="博客源站IP泄露的两种主要方式与防护指南">
-<meta property="og:url" content="https://www.xscnet.cn/posts/p3420260329/">
+<meta property="og:title" content="AI导致的乱象以及个人形象与大家的初次见面">
+<meta property="og:url" content="https://www.xscnet.cn/posts/p3820260502/">
 <meta property="og:site_name" content="-Mete0r's Blog | 壹人小站-">
-<meta property="og:description" content="源站IP泄露是博客安全中常见但容易被忽视的问题。本文结合实际案例，详细分析了邮件推送和TLS/SSL证书两种泄露源站IP的典型途径，包括其原理、成因以及具体排查方式。同时，文章提供了使用阿里云邮件推送服务、关闭源站Web端口、配置默认假证书等实用的防护方案，帮助博主在不影响正常功能的前提下有效隐藏源站IP，提升网站整体安全性。">
+<meta property="og:description" content="五一假期临近高考，分享日常备考与学习感悟，结合瑞文推理测验实测发现过度依赖AI会造成推理能力下滑，从独立思考、主观能动性、专注力、认知卸载四方面剖析AI滥用带来的大脑与认知乱象，引用多份权威资料佐证危害，谈及算法碎片化信息侵蚀思维，同时公布个人虚拟形象流星同学正式登场，博客小幅优化细节Bug，立下戒过度依赖AI、回归自主思考学习的决心。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg">
-<meta property="article:published_time" content="2026-03-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-03-29T06:05:05.000Z">
+<meta property="article:published_time" content="2026-05-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-01T16:00:00.000Z">
 <meta property="article:author" content="Mete0r">
-<meta property="article:tag" content="博客">
-<meta property="article:tag" content="教学">
-<meta property="article:tag" content="服务器">
+<meta property="article:tag" content="个人形象">
+<meta property="article:tag" content="生活">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg">
   
   
   
-  <meta name="keywords" content="博客,教学,服务器">
+  <meta name="keywords" content="生活,个人形象">
 
   <!-- feed -->
   
@@ -352,7 +351,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mete0r","sameAs":[],"image":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg"},"dateCreated":"2026-03-29T00:00:00+08:00","dateModified":"2026-03-29T14:05:05+08:00","datePublished":"2026-03-29T00:00:00+08:00","description":"源站IP泄露是博客安全中常见但容易被忽视的问题。本文结合实际案例，详细分析了邮件推送和TLS/SSL证书两种泄露源站IP的典型途径，包括其原理、成因以及具体排查方式。同时，文章提供了使用阿里云邮件推送服务、关闭源站Web端口、配置默认假证书等实用的防护方案，帮助博主在不影响正常功能的前提下有效隐藏源站IP，提升网站整体安全性。","headline":"博客源站IP泄露的两种主要方式与防护指南","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.xscnet.cn/posts/p3420260329/"},"publisher":{"@type":"Organization","name":"Mete0r","sameAs":[],"image":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg","logo":{"@type":"ImageObject","url":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg"}},"url":"https://www.xscnet.cn/posts/p3420260329/","keywords":"博客, 教学, 服务器","thumbnailUrl":"https://img.xscnet.cn//i/2026/03/29/69c8c6ac766bb.png","image":1}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mete0r","sameAs":[],"image":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg"},"dateCreated":"2026-05-02T00:00:00+08:00","dateModified":"2026-05-02T00:00:00+08:00","datePublished":"2026-05-02T00:00:00+08:00","description":"五一假期临近高考，分享日常备考与学习感悟，结合瑞文推理测验实测发现过度依赖AI会造成推理能力下滑，从独立思考、主观能动性、专注力、认知卸载四方面剖析AI滥用带来的大脑与认知乱象，引用多份权威资料佐证危害，谈及算法碎片化信息侵蚀思维，同时公布个人虚拟形象流星同学正式登场，博客小幅优化细节Bug，立下戒过度依赖AI、回归自主思考学习的决心。","headline":"AI导致的乱象以及个人形象与大家的初次见面","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.xscnet.cn/posts/p3820260502/"},"publisher":{"@type":"Organization","name":"Mete0r","sameAs":[],"image":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg","logo":{"@type":"ImageObject","url":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg"}},"url":"https://www.xscnet.cn/posts/p3820260502/","keywords":"生活, 个人形象","thumbnailUrl":"https://img.xscnet.cn//i/2026/05/02/69f6192d7751b.webp","image":1}</script>
   <link rel="stylesheet" href="/css/ak.css"><link rel="stylesheet" href="/css/ech0-timeline.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="all" onload="this.media=&quot;all&quot;"><link rel="stylesheet" href="/css/fixmode.css">
 </head>
 <body><div class="sitebg"><div class="siteblur"></div></div>
@@ -380,136 +379,73 @@
 
 
 
-<div class="article banner top">
+<div class="article banner top"><img class="lazy bg" data-src="https://img.xscnet.cn//i/2026/05/02/69f6192d7751b.webp">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-28T16:00:00.000Z">2026-03-29</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-03-29T06:05:05.000Z">2026-03-29</time></span></div></div></div>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-05-01T16:00:00.000Z">2026-05-02</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-05-01T16:00:00.000Z">2026-05-02</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>博客源站IP泄露的两种主要方式与防护指南</span></h1>
+        <h1 class="text title"><span>AI导致的乱象以及个人形象与大家的初次见面</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近 <strong><a target="_blank" rel="noopener" href="https://koxiuqiu.cn/">klcdm老哥</a></strong> 提醒我，提醒道我的服务器IP会因为以前的邮件推送方式泄露<br>我一查，果然如此<br><a target="_blank" rel="noopener" href="https://koxiuqiu.cn/posts/a8migration/">kl的往期文章</a>也提到过此事  </p>
-<h2 id="泄露原因"><a href="#泄露原因" class="headerlink" title="泄露原因"></a>泄露原因</h2><h3 id="1-邮件推送"><a href="#1-邮件推送" class="headerlink" title="1. 邮件推送"></a>1. 邮件推送</h3><p>如果您的博客使用的是QQ邮箱或者163邮箱诸如此类的邮箱则会遇到这种情况  </p>
-<blockquote>
-<p><strong>Q: 哪些SMTP服务会导致IP泄露？</strong><br>A: 答案是：几乎所有允许你直接使用“客户端/服务器”方式连接的SMTP服务，都有可能泄露</p>
-</blockquote>
-<h4 id="QQ邮箱SMTP发信泄露源站IP的原理"><a href="#QQ邮箱SMTP发信泄露源站IP的原理" class="headerlink" title="QQ邮箱SMTP发信泄露源站IP的原理"></a>QQ邮箱SMTP发信泄露源站IP的原理</h4><p>这种情况常见于你的博客网站使用了邮件功能（如注册验证、密码找回、通知邮件），并且邮件是通过源站服务器直接使用SMTP发送的  </p>
+  </div><article class="md-text content">
+    <div class="tag-plugin audio">
+    <iframe src="//music.163.com/outchain/player?type=2&amp;id=1832684671&amp;auto=0&amp;height=32" frameborder="no" border="0" marginwidth="0" marginheight="0" width="288px" height="52">
+    </iframe>
+    </div>
+    
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首先在这里，祝大家五一快乐，不过各位五一都是怎么过的呢~  </p>
+<p>快高考了，谁能想到我们竟成为了第一届五一五天假期全部正常放假的一届呢哈哈哈  </p>
+<h2 id="生活方面"><a href="#生活方面" class="headerlink" title="生活方面"></a>生活方面</h2><p>在生活方面没什么太大的变动，依旧早出晚归，不过也好，再过三十多天就彻底解放了！<br>我总是希望自己能做到既不..也不.. 但事与愿违，没有不努力就能获得的成功，也没有不学习就获得的知识<br>像我感兴趣的计算机方面，其实也是在每天的折腾中边折腾边学习<br>所以 <strong>“活到老，学到老”</strong> 这句话真的不是空穴来风，我们能在社会中生存下去，能融入这个社会，也是在不断地学习中的  </p>
+<p>不过，在AI盛行的时代，我们又如何去保持学习的能力呢？<br>最近我自己做了一个小测试，采用<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cueG1jcy5jbi94L3J1aXdlbg">瑞文标准推理测验</a>，测试了我在<code>重度</code>依赖AI后的推理能力<br>事情确实与预期相符，仅仅不到一周的事件，我的推理能力就有轻微的下降<br>所以，过度依赖AI，会招致一些问题，特别是对AI的依赖性  </p>
 <ul>
-<li><p>1 .背景知识  </p>
-<p>很多网站会配置邮件服务，使用第三方邮箱（如QQ邮箱、163邮箱、企业邮箱）的SMTP服务器来代发邮件<br>邮件原文中，通常包含发件服务器的IP信息，这是SMTP协议的一部分  </p>
+<li><ol>
+<li>缺少独立思考能力<br>我在这个方面并没有太大的改变，毕竟我一直是一个喜欢独立思考，明辨是非的人，这也许是刻在骨子里的执念，我并不是特别喜欢直接听信别人的话，就比如现在的短视频平台上，有很多营销号会告诉你<code>"科学实验发现了一种新的蛋白质drt3b"</code>,<code>"百年的中心法则理论被打破了！"</code> 可是事实上呢？drt3b是一个可以无需模板链合成的蛋白质，他也修正了人们一直以为的<code>“所有序列特异性的聚合酶，都必须依赖一条核算作为模板”</code>的结论，但是他仅仅是个例，还不足以做到<code>"打破中心法则"</code>的这种地步，他仅仅可以证明中心法则是不全面的，现在人类发现了一个新的蛋白质，可以补全中心法则的这一步了而已</li>
+</ol>
 </li>
-<li><p>2 .泄露原理  </p>
-<p>当网站源站服务器通过SMTP协议连接QQ邮箱的发信服务器时，QQ邮箱会在邮件的原始头部（Email Header）中记录下连接来源的IP地址，即网站源站服务器的公网IP<br>这个信息通常位于 Received: from 字段中<br>我的博客在原来的方案中也是这么泄露了源站IP：<br><strong>当然，如果您以前与我进行互访，于此知道了我的源站IP，请您务必不要泄露，谢谢您的配合</strong><br><img src="https://img.xscnet.cn//i/2026/03/29/69c8c0ba76723.png"><br>您可以这么查看：点击邮件，然后选择查看，查看邮件源<br><img src="https://img.xscnet.cn//i/2026/03/29/69c8bf81b1f78.png">  </p>
-<p>攻击者只需要：<br>注册一个网站账号，触发一封邮件（如验证邮件）发送到自己的邮箱<br>查看邮件的原文/源代码（不同邮箱客户端叫法不同，如Outlook的“查看邮件源”）<br>在邮件头部找到 Received 字段，其中就可能包含网站真实的源站IP  </p>
-</li>
-<li><p>3 .常见成因<br>网站没有使用专业的邮件发送服务（如SendCloud、阿里云邮件推送等），而是直接使用普通的SMTP邮箱代发<br>更重要的是，发信操作是在源站服务器上直接进行的，而不是通过CDN或专门的中继服务器  </p>
-</li>
-<li><p>4 .普遍存在的漏洞:<br>源站IP的泄露关键在于：泄露源站IP的并不是邮箱服务商本身，而是你“从哪里”连上它的SMTP服务器发信  </p>
-<p>所有自建邮件服务器：如果你在自己的源站服务器上搭建了邮件服务，然后直接用这台服务器发信，那么邮件的Received头里必定包含你服务器的IP –这是最直接的泄露方式  </p>
-<p>使用第三方SMTP中继服务：当你配置邮件客户端（如Outlook、Foxmail）或代码，填写了第三方SMTP服务器信息（如mail.xxxx.com），但连接的IP是你服务器的IP时，依然会泄露</p>
+<li><ol start="2">
+<li>缺少主观能动性<br>以前的我们，要做什么事情需要利用Google Search等搜索引擎去收集我们需要的资料，然后利用手中的资料去思考：我该如何解决这个问题？我该如何做才能做到？<br>但随着AI的浪潮席卷而来，<strong>我们的试错成本正在急剧降低</strong>，从原先的<code>我不得不学</code>，到现在的<code>我为什么要学</code><br>试错成本会不断下降，导致了人们被AI逐渐养成了一个<code>“废人”</code>，什么事情都想着 <strong>“哎呀，为什么要费劲自己去查呢，喂给AI不久好了吗”</strong>，这种科技的提升，确实让我们的办事效率提高了不少，但是，过度依赖AI并不是一个好的选择<br>一开始只是查询信息、翻译文字，慢慢开始利用AI辅助写邮件、工作总结、研究论文，甚至进行重要决策……过度依赖AI，利用其进行“思维外包”，有可能让我们日渐丧失思维的主导权 *资料来源7<br>在麻省理工的新闻中提及过，据《福布斯》杂志的罗伯特·B·塔克报道，麻省理工学院的研究人员发现，使用ChatGPT会导致认知参与度下降 *资料来源8</li>
+</ol>
 </li>
 </ul>
-<h5 id="SMTP泄露源站IP的解决方案"><a href="#SMTP泄露源站IP的解决方案" class="headerlink" title="SMTP泄露源站IP的解决方案"></a>SMTP泄露源站IP的解决方案</h5><p>我自己的解决方案目前是使用<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9kbS5jb25zb2xlLmFsaXl1bi5jb20vIy9kaXJlY3RtYWlsL0hvbWUvY24taGFuZ3pob3U">阿里云邮件推送服务</a>的免费额度<br>他是信誉分机制，具体统计规则如下(资料来源：<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9oZWxwLmFsaXl1bi5jb20vemgvZGlyZWN0LW1haWwvZ2V0dGluZy1zdGFydGVkL3Byb2R1Y3QtcnVsZXMvP3NwbT01MTc2LjIwMjA1MjAxNTAuY29uc29sZS1iYXNlX2hlbHAuZGV4dGVybmFsLjUxNDI3NTI4ckRtUm9w">阿里云邮件推送服务产品规则</a>)：<br>每个阿里云账户开通登录后，不同的阿里云账户会根据在阿里云整体等级分配不同的初始值，最低初始信誉等级为2级，对应日额度为 2000 封/日。信誉等级最高是16级，对应日额度为 1000 万封/日<br><img src="https://img.xscnet.cn//i/2026/03/29/69c8c185a29ed.png"><br>信誉等级与日额度的对应关系如下：  </p>
-<table>
-<thead>
-<tr>
-<th>信誉等级</th>
-<th>日额度（封）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1级</td>
-<td>500</td>
-</tr>
-<tr>
-<td>2级</td>
-<td>2,000</td>
-</tr>
-<tr>
-<td>3级</td>
-<td>5,000</td>
-</tr>
-<tr>
-<td>4级</td>
-<td>8,000</td>
-</tr>
-<tr>
-<td>5级</td>
-<td>10,000</td>
-</tr>
-<tr>
-<td>6级</td>
-<td>20,000</td>
-</tr>
-<tr>
-<td>7级</td>
-<td>50,000</td>
-</tr>
-<tr>
-<td>8级</td>
-<td>100,000</td>
-</tr>
-<tr>
-<td>9级</td>
-<td>200,000</td>
-</tr>
-<tr>
-<td>10级</td>
-<td>500,000</td>
-</tr>
-<tr>
-<td>11级</td>
-<td>800,000</td>
-</tr>
-<tr>
-<td>12级</td>
-<td>1,000,000</td>
-</tr>
-<tr>
-<td>13级</td>
-<td>2,000,000</td>
-</tr>
-<tr>
-<td>14级</td>
-<td>5,000,000</td>
-</tr>
-<tr>
-<td>15级</td>
-<td>8,000,000</td>
-</tr>
-<tr>
-<td>16级</td>
-<td>10,000,000</td>
-</tr>
-</tbody></table>
-<p>那么对于我们自己的博客，这个额度已经足够使用了</p>
-<p>而通过这样配置的SMTP服务，并不会显示你服务器源站IP，而是显示阿里云邮件推送服务器的IP<br>但这种方式有一个明显的弊端：邮件推送服务通常使用共享IP节点。一旦同一IP下有其他用户发送恶意邮件，该IP便可能被各大邮箱服务商列入黑名单，从而影响正常邮件的送达率<br>但这样，优点却显而易见  </p>
-<ol>
-<li>邮件发送服务不会泄露源站IP  </li>
-<li>邮件使用的是你自己的域名，较为有辨识度</li>
-</ol>
-<h3 id="2-证书泄露源站IP"><a href="#2-证书泄露源站IP" class="headerlink" title="2. 证书泄露源站IP"></a>2. 证书泄露源站IP</h3><p>当你为网站配置HTTPS时，会用到一份TLS/SSL证书<br>这份证书里，有一个字段叫 <code>“使用者备用名称”</code> ，里面清清楚楚地写着你的网站域名，有时甚至直接包含了服务器的IP地址或内网域<br>当扫描者通过IP访问拿到了你的证书，会根据域名与你的IP相比对，一旦某个IP在443端口返回了与你网站相同的证书信息，基本可以确定这就是源站IP  </p>
-<h4 id="证书泄露源站IP的原理"><a href="#证书泄露源站IP的原理" class="headerlink" title="证书泄露源站IP的原理"></a>证书泄露源站IP的原理</h4><p>这种情况主要发生在使用HTTPS且配置了CDN的网站上  </p>
-<p>-1 .背景知识<br>  网站为了安全、加速，通常会套用CDN（如Cloudflare、腾讯云EO等）<br>  用户访问时，DNS解析到CDN节点，CDN节点再将请求转发给源站服务器<br>  理想情况下，所有流量都经过CDN，源站IP不对外暴露  </p>
+<p>在AI的浪潮中，我们似乎养成了一种不依赖AI就不能集中精神去干一件事的习惯，这也是下一点的关键  </p>
 <ul>
-<li>2 .泄露原理<br>在HTTPS中，TLS/SSL证书通常绑定在域名上<br>如果源站服务器本身也开启了HTTPS（80/443端口），并且直接绑定了该域名的证书，那么当有人绕过CDN，直接向源站IP发起HTTPS请求时，源站会返回该证书<br>攻击者可以通过全网扫描，寻找返回该域名证书的IP。一旦某个IP在443端口返回了与你网站相同的证书信息，基本可以确定这就是源站IP<br><strong>这里提及一个很恶心人的网站：<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cuc2hvZGFuLmlvLw">shodan.io</a>在这个网站里，他会不间断的扫描所有IP段，寻找你服务器的漏洞，您可以这样尝试 <a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cuc2hvZGFuLmlvL2hvc3QvJUU0JUJEJUEwJUU2JTlDJThEJUU1JThBJUExJUU1JTk5JUE4JUU3JTlBJTg0SVAlRTUlOUMlQjAlRTUlOUQlODA">https://www.shodan.io/host/你服务器的IP地址</a></strong></li>
-</ul>
-<p>-3 .常见成因<br>  在您为你的网站配置CDN时，没有关闭源站的Web服务（Nginx、Apache等）<br>  或者因为“只允许CDN回源IP访问”的防火墙规则配置不完善，导致源站80/443端口对公网开放  </p>
-<h5 id="证书泄露源站IP的解决方案"><a href="#证书泄露源站IP的解决方案" class="headerlink" title="证书泄露源站IP的解决方案"></a>证书泄露源站IP的解决方案</h5><ol>
-<li><p>关闭源站80/443端口对公网开放<br>这是最简单直接的方法，因为关闭了这些端口，你只需要配置CDN回源的端口即可，但大多数攻击者并不会费尽心思扫描你所有的端口  </p>
-</li>
-<li><p>为default_site设置一个假的证书<br>这种情况使用在您无法关闭源站的443端口，或者CDN回源的端口被限制时<br>您可以创建一个假的证书，自签10年即可，名字可以取：CNMSB扫描器Gun一边去.crt<br>这样当访问者不携带域名信息访问您的IP时，返回的只是defalut_site的假证书，而不是您博客的证书</p>
-</li>
+<li><ol start="3">
+<li>缺少专注力<br>在做事的过程中，拥有一个不错的专注力是很重要的，但是在时代的促使下，我们频繁的为大脑灌输快节奏跳跃性的碎片化信息，不断地刺激神经<br>在神经科学中，研究者发现，在不同的任务间切换会让大脑的前额皮质和纹状体快速消耗葡萄糖。脑组织是以葡萄糖的氧化来供能的，葡萄糖的快速消耗会让人在短时间内就感到疲惫和晕头转向。这不仅会影响到人的认知水平，还会影响人的身体机能。 *资料来源10</li>
 </ol>
-<h2 id="我的解决日志"><a href="#我的解决日志" class="headerlink" title="我的解决日志"></a>我的解决日志</h2><p>截至2026/03/29,所有问题均解决<br>CDN回源使用IP回源，域名指向IP已取消<br>邮件推送已切换为阿里云<br><strong>目前.top域名已无法访问博客，301已取消，请使用<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cueHNjbmV0LmNu6K6_6ZeuLw">https://www.xscnet.cn访问</a></strong><br><strong>若您访问<a target="_blank" rel="noopener" href="https://xscnet.cn/">https://xscnet.cn/</a> 则无法跳转，由于阿里云限制，只有http访问可自动301到3w,https访问子域名无法跳转 - 由于博主设置了HSTS，您可能无法使用HTTP协议</strong><br><strong>同样的，<a target="_blank" rel="noopener" href="https://www.xscnas.top/">https://www.xscnas.top/</a> 无法正常跳转，需切换为http协议 - 由于博主设置了HSTS，您可能无法使用HTTP协议</strong>  </p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>任何漏洞，都是有成因的，只有你找到这个成因，才能找到对应的解决方案<br>不过，漏洞始终随着软件的更新而出现，我们只有努力的应对，才可以使我们的网站保持最安全的状态<br>不能亵渎任何的漏洞<br><strong>常在河边走，哪有不湿鞋</strong>  </p>
+</li>
+</ul>
+<p>碎片化的信息和AI滥用正在侵蚀着青少年的大脑：青少年原本大脑前额叶就还没有完全发育成熟，催产素和多巴胺倒是处于激增时期，这会让个体寻求感官刺激和冒险，如果再长时间处于一种快节奏、高互动的强刺激之中，大脑就会以一种前所未有的方式适应这种刺激，进而重新塑造自己的运行模式<br>碎片化的信息也会干扰人的思维模式，让你永远无法集中精神，甚至在做一件需要思考的问题是，会不耐烦，感觉麻烦  </p>
+<p>这些新技术带来的社会问题，我们可能是直接面对它的第一代人。尼古拉斯·内格罗蓬特在上世纪末就预言了“我的日报”的出现：<code>一个个人化设计的传播包裹，里头的配件都是事先选好的</code><br>在算法的控制下，你会从互联网的洪流中得到永远刷不完的信息流，它让你的大脑“开心”到停不下来<br>然而，你越是不断刷“猜你喜欢”的定制化视频  </p>
+<ul>
+<li><ol start="4">
+<li>认知”卸载”问题<br>根据MIT麻省理工大学的研究，当人过度依赖AI的时候，大脑的活动<code>几乎与无任务时无异</code><br>而以AI为辅助的人，大脑活动也<code>有所降低</code>，但因为自己切身参与了项目，所以对项目整体是有思考以及认知的，因为他们只是利用了AI辅助自己搜索资料和适当的辅助思考，而不是完全依赖AI</li>
+</ol>
+</li>
+</ul>
+<p>现在因为GPT Image 2.0问世，促成了一条猜疑链 <code>"我现在都怀疑你这和AI聊天的图片是GPT生成的"</code><br>黑暗森林！  </p>
+<div class="tag-plugin image"><div class="image-bg" style="padding:16px;aspect-ratio:1179/2556;width:200px;"><img class="lazy" src="https://img.xscnet.cn//i/2026/05/02/69f612c090a8e.png" data-src="https://img.xscnet.cn//i/2026/05/02/69f612c090a8e.png" alt="GPT Image 2.0猜疑链" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">GPT Image 2.0猜疑链</span></div></div>
+
+<p><strong>通过这些我切身经历的教训，证明了：过度依赖AI，会招致一些问题，特别是对大脑的损伤</strong><br>这边也建议大家适当的<code>“回归原始”</code>，利用手里的搜索引擎去搜集资料自己思考，而不是直接把问题和想要的结果喂给AI后什么也不思考  </p>
+<p>科技的发展是必然的，如果科技不发展，人类将永远停留在原始时代，不过，对新事物的合理利用，是当下需要解决的重要问题  </p>
+<h2 id="博客方面"><a href="#博客方面" class="headerlink" title="博客方面"></a>博客方面</h2><p>博客方面没有过大的改动，自从上次样式大改完，整体基调已经定下来了，这段时间改动也就是一些小的Bug<br>例如Artalk评论区点选表情包会出现放大表情包的问题<br>还有一些图片无法正常放大的问题  </p>
+<h3 id="女儿！"><a href="#女儿！" class="headerlink" title="女儿！"></a>女儿！</h3><p>最近为自己制作了一个虚拟形象，相信大家很早之前就已经看到了，这次算是正式和大家见面了！<br>个人形象的版权申请已经通过了，所以就拉出来和大家混个面熟！<br>女儿的名字是：<code>流星同学</code>  </p>
+<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:1535/2732;"><img class="lazy" src="https://img.xscnet.cn//i/2026/05/02/69f61019f17fd.png" data-src="https://img.xscnet.cn//i/2026/05/02/69f61019f17fd.png" alt="流行同学夏季限定" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">流行同学夏季限定</span></div></div>  
+<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:1535/2732;"><img class="lazy" src="https://img.xscnet.cn//i/2026/05/02/69f61019eca5b.png" data-src="https://img.xscnet.cn//i/2026/05/02/69f61019eca5b.png" alt="流星同学社畜套装" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">流星同学社畜套装</span></div></div>  
+
+<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:6819/4822;"><img class="lazy" src="https://img.xscnet.cn//i/2026/05/02/69f61019f119f.png" data-src="https://img.xscnet.cn//i/2026/05/02/69f61019f119f.png" alt="流星同学的身份证" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">流星同学的身份证</span></div></div>  
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>生活上没什么太大的变化，估计等到高考后要潇洒一阵子了<br>下定决心，先从一个月做起，能自己完成的任务，不会再使用AI了！<br><del>争取吧丢失的智商赚回来</del></p>
+<p>博客内的表情包是可以合法使用的哦！  </p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>本文全文无AI聚合资料，全为互联网查阅<br>本文参考/引用资料<code>(排名不分先后顺序)</code>：  </p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3poLWNuLyVFNyU5MSU5RSVFNiU5NiU4NyVFNiVCMCU4RiVFNiVBOCU5OSVFNiVCQSU5NiVFNiU4RSVBOCVFNyU5MCU4NiVFNiVCOCVBQyVFOSVBOSU5Nw">1. 瑞文标准推理测验</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9tLnRoZXBhcGVyLmNuL25ld3NEZXRhaWxfZm9yd2FyZF8zMjk5NzE2MQ">2. 澎湃新闻 | 挑战中心法则？中国博后一作Science：发现首个以蛋白质为模板合成DNA的逆转录酶</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3poLWhhbnMvJUU0JUI4JUFEJUU1JUJGJTgzJUU2JUIzJTk1JUU1JTg5JTg3">3. 维基百科 | 中心法则</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3poLWNuLyVFOCU4MyVCRCVFNSU4QSVBOCVFNiU4MCVBN18oJUU1JTkzJUIyJUU1JUFEJUE2KQ">4. 维基百科 | 能动性(哲学)</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cuc2VtYW50aWNzY2hvbGFyLm9yZy9wYXBlci8lRTglQUYlOTUlRTglQUUlQkElRTQlQjglQkIlRTglQTclODIlRTglODMlQkQlRTUlOEElQTglRTYlODAlQTclRTglQjUlQjclRTQlQkQlOUMlRTclOTQlQTglRTclOUElODQlRTklODAlODIlRTUlQkElQTYlRTUlOEUlOUYlRTUlODglOTklRTIlODAlOTQlRTIlODAlOTQlRTUlODUlQkMlRTglQUUlQkElRTQlQjglQkIlRTQlQkQlOTMlRTIlODAlOTQlRTIlODAlOTQlRTUlQUUlQTIlRTQlQkQlOTMlRTklOTclQUUlRTklQTIlOTgtJUU0JUJCJUJCJUU3JThFJTg5JUU1JUIyJUFEL2E3YjA2NGE3ZDVjY2Q2ZmU5ZGQ5ZDZjYTk4MGQzZmNiZmU2ODIwMzg">5. SEMANTIC SCHOOL | 试论主观能动性起作用的适度原则——兼论主体——客体问题</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzI0NDk2MzY5">6. 知乎 | 如何以最简明的方式解释什么是主观能动性？</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cubmV3cy5jbi93b3JsZC8yMDI1MTAyOC82YTMyMjhkZTA5N2Y0NjVkOTk4ZWE0OWUxNjA5OWQ2Mi9jLmh0bWw">7. 新华网 | 警惕“AI依赖” 人机共生时代如何保持独立思考</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9uZXdzLm1pdC5lZHUvbmV3cy1jbGlwL2ZvcmJlcy03ODU">8. Clip Forbes Is ChatGPT making us stupid? (June 20) | MIT News</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cubmV3cy5jbi9saWFuZ3ppLzIwMjYwNDA3LzE3MzRmZDI2NjE2NTQ5MWJiYTBhMmRmN2NkOThhOWFiL2MuaHRtbA">9. 新华网 | 如何避免过度使用AI造成“脑损伤”</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9wYXBlci5wZW9wbGUuY29tLmNuL3JtemsvaHRtbC8yMDE1LTA4LzA1L2NvbnRlbnRfMTYxNzQ3MC5odG0">10. 人民日报 | 碎片化造成现代人智商下降</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cubmV3cy5jbi9saWFuZ3ppLzIwMjUwODIxLzExN2ZiZTZiNWIzMTRmMWFiNDI5MzA1MGIyYTBhMTY2L2MuaHRtbA">11. 新华网 | 过度依赖AI或导致“认知卸载”问题</a><br><a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cuYWRheW1hZy5jb20vMjAyNS8wNy8xNi9taXQtYnJhaW4tc2Nhbi1zdHVkeS1jaGF0Z3B0LXVzZXJzLmh0bWw">12. A Day Magazine | 麻省理工掃描依賴 ChatGPT 的使用者腦部，發現讓人不安的現象</a>  </p>
 </article>
 <div class="article-footer">
     <section id="license">
@@ -521,7 +457,7 @@
 
 </div>
 
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/p3520260403/">使用Hexo搭建自己的博客</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/p3320260325/">三月小记：春雨、体检与博客二三事</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/p3720260420/">游戏体验：《PRAGMATA》(识质存在)</a></div></section></div>
 
 
 
@@ -559,7 +495,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%84%E9%9C%B2%E5%8E%9F%E5%9B%A0"><span class="toc-text">泄露原因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%82%AE%E4%BB%B6%E6%8E%A8%E9%80%81"><span class="toc-text">1. 邮件推送</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#QQ%E9%82%AE%E7%AE%B1SMTP%E5%8F%91%E4%BF%A1%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">QQ邮箱SMTP发信泄露源站IP的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SMTP%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">SMTP泄露源站IP的解决方案</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AF%81%E4%B9%A6%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP"><span class="toc-text">2. 证书泄露源站IP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">证书泄露源站IP的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">证书泄露源站IP的解决方案</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E8%A7%A3%E5%86%B3%E6%97%A5%E5%BF%97"><span class="toc-text">我的解决日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"></path><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"></path></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"></path></svg><span>参与讨论</span></a></div></widget>
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%B4%BB%E6%96%B9%E9%9D%A2"><span class="toc-text">生活方面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%9A%E5%AE%A2%E6%96%B9%E9%9D%A2"><span class="toc-text">博客方面</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%B3%E5%84%BF%EF%BC%81"><span class="toc-text">女儿！</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"></path><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"></path></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"></path></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class="float-panel">
   <button type="button" style="display:none" class="laptop-only rightbar-toggle mobile" onclick="sidebar.rightbar()">
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
@@ -1072,7 +1008,7 @@
       const artalk = Artalk.init({
         el: '#artalk_container',
         pageKey: path,
-        pageTitle: '博客源站IP泄露的两种主要方式与防护指南',
+        pageTitle: 'AI导致的乱象以及个人形象与大家的初次见面',
         server: 'https://artalk.xscnet.cn/',
         site: 'Mete0rBlog',
         darkMode: 'auto',

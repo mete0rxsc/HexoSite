@@ -1,308 +1,8 @@
-<!DOCTYPE html><html lang="zh-CN"><head><!-- hexo injector head_begin start -->
-    <script>
-      window.LivePhotoConfig = {"enable":true,"autoplay":true,"hover_to_play":true,"click_to_play":true,"lazy_load":true,"threshold":0.7,"badge":true,"badge_text":"Live","badge_position":"bottom-left","loading_animation":true,"preload":"auto","keep_observing":false,"hover_delay":300,"weixin_disable_autoplay":true};
-    </script>
-  <style>/* Live Photo 容器 */
-.live-photo-container {
-  position: relative;
-  border-radius: 12px;
-  margin: 20px 0;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  max-width: 100%;
-}
-
-.live-photo-container:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-/* 静态图片 */
-.live-photo-static {
-  width: 100%;
-  display: block;
-  border-radius: 8px;
-  transition: opacity 0.3s;
-}
-
-/* 视频元素 */
-.live-photo-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  border-radius: 8px;
-  transition: opacity 0.3s;
-}
-
-.live-photo-video.playing {
-  opacity: 1;
-}
-
-/* Live 标识 */
-.live-badge {
-  position: absolute;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  z-index: 10;
-}
-
-.live-badge::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  background: #ff2e4d;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-/* 位置变体 */
-.live-badge.bottom-left {
-  bottom: 12px;
-  left: 12px;
-}
-
-.live-badge.bottom-right {
-  bottom: 12px;
-  right: 12px;
-}
-
-.live-badge.top-left {
-  top: 12px;
-  left: 12px;
-}
-
-.live-badge.top-right {
-  top: 12px;
-  right: 12px;
-}
-
-/* 加载指示器 */
-.live-loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #ff2e4d;
-  animation: livephoto-spin 1s ease-in-out infinite;
-  display: none;
-  z-index: 1;
-}
-
-@keyframes livephoto-spin {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* 标题样式 */
-.live-caption {
-  text-align: center;
-  margin-top: 8px;
-  font-size: 14px;
-  color: #666;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .live-photo-container {
-    border-radius: 8px;
-    margin: 16px 0;
-  }
-  
-  .live-badge {
-    font-size: 11px;
-    padding: 3px 6px;
-  }
-  
-  .live-badge.bottom-left,
-  .live-badge.bottom-right {
-    bottom: 8px;
-  }
-  
-  .live-badge.bottom-left,
-  .live-badge.top-left {
-    left: 8px;
-  }
-  
-  .live-badge.bottom-right,
-  .live-badge.top-right {
-    right: 8px;
-  }
-  
-  .live-badge.top-left,
-  .live-badge.top-right {
-    top: 8px;
-  }
-  
-}
-
-/* 多图布局容器 */
-.image-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 20px 0;
-  gap: 15px; /* 使用gap属性设置间距 */
-}
-
-.image-column {
-  flex: 0 0 calc(50% - 8px); /* 每列占50%宽度减去一半的间距 */
-  min-width: 0; /* 防止内容溢出 */
-}
-
-/* Grid布局 */
-.image-grid-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 始终保持两列 */
-  gap: 15px;
-  margin: 20px 0;
-}
-
-.grid-item {
-  position: relative;
-  min-width: 0; /* 防止内容溢出 */
-}
-
-/* 浮动布局 */
-.image-float-container {
-  width: 100%;
-  margin: 20px 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.float-image {
-  flex: 0 0 calc(50% - 8px); /* 每列占50%宽度减去一半的间距 */
-}
-
-/* Live Photo 容器适配多图布局 */
-.image-grid .live-photo-container,
-.image-grid-grid .live-photo-container,
-.image-float-container .live-photo-container {
-  margin: 0; /* 移除单独设置的外边距 */
-  border-radius: 8px; /* 稍微减小圆角以适应小屏幕 */
-}
-
-/* 确保图片和视频在多图布局中正确显示 */
-.image-grid .live-photo-static,
-.image-grid-grid .live-photo-static,
-.image-float-container .live-photo-static,
-.image-grid .live-photo-video,
-.image-grid-grid .live-photo-video,
-.image-float-container .live-photo-video {
-  border-radius: 8px; /* 与容器保持一致 */
-}
-
-/* 调整Live标识在小屏幕上的大小 */
-.image-grid .live-badge,
-.image-grid-grid .live-badge,
-.image-float-container .live-badge {
-  font-size: 10px;
-  padding: 2px 6px;
-}
-
-.image-grid .live-badge.bottom-left,
-.image-grid-grid .live-badge.bottom-left,
-.image-float-container .live-badge.bottom-left,
-.image-grid .live-badge.bottom-right,
-.image-grid-grid .live-badge.bottom-right,
-.image-float-container .live-badge.bottom-right {
-  bottom: 8px;
-}
-
-.image-grid .live-badge.bottom-left,
-.image-grid-grid .live-badge.bottom-left,
-.image-float-container .live-badge.bottom-left,
-.image-grid .live-badge.top-left,
-.image-grid-grid .live-badge.top-left,
-.image-float-container .live-badge.top-left {
-  left: 8px;
-}
-
-.image-grid .live-badge.bottom-right,
-.image-grid-grid .live-badge.bottom-right,
-.image-float-container .live-badge.bottom-right,
-.image-grid .live-badge.top-right,
-.image-grid-grid .live-badge.top-right,
-.image-float-container .live-badge.top-right {
-  right: 8px;
-}
-
-.image-grid .live-badge.top-left,
-.image-grid-grid .live-badge.top-left,
-.image-float-container .live-badge.top-left,
-.image-grid .live-badge.top-right,
-.image-grid-grid .live-badge.top-right,
-.image-float-container .live-badge.top-right {
-  top: 8px;
-}
-
-/* 非常小的设备调整 */
-@media (max-width: 360px) {
-  .image-grid {
-    gap: 10px;
-  }
-  
-  .image-column {
-    flex: 0 0 calc(50% - 5px); /* 调整间距 */
-  }
-  
-  .image-grid-grid {
-    gap: 10px;
-  }
-  
-  .float-image {
-    flex: 0 0 calc(50% - 5px); /* 调整间距 */
-  }
-  
-  /* 进一步调整Live标识 */
-  .image-grid .live-badge,
-  .image-grid-grid .live-badge,
-  .image-float-container .live-badge {
-    font-size: 9px;
-    padding: 2px 4px;
-  }
-}
-
-/* 确保单图布局不受影响 */
-.live-photo-container:not(.image-grid):not(.image-grid-grid):not(.image-float-container) {
-  margin: 20px 0;
-}
-
-/* 标题样式调整 */
-.live-caption {
-  font-size: 13px; /* 稍微减小字体大小 */
-  margin-top: 5px;
-  line-height: 1.4;
-}
-
-/* 确保加载指示器在多图布局中正确显示 */
-.image-grid .live-loading,
-.image-grid-grid .live-loading,
-.image-float-container .live-loading {
-  width: 30px;
-  height: 30px;
-}</style><!-- hexo injector head_begin end -->
+<!DOCTYPE html><html lang="zh-CN"><head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
   
-  
+  <meta name="robots" content="noindex,follow">
   <meta name="generator" content="Hexo 8.1.1">
   <meta http-equiv="x-dns-prefetch-control" content="on">
   
@@ -314,29 +14,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>博客源站IP泄露的两种主要方式与防护指南 - -Mete0r's Blog | 壹人小站-</title>
+  <title>标签：个人形象 - -Mete0r's Blog | 壹人小站-</title>
 
   
-    <meta name="description" content="源站IP泄露是博客安全中常见但容易被忽视的问题。本文结合实际案例，详细分析了邮件推送和TLS/SSL证书两种泄露源站IP的典型途径，包括其原理、成因以及具体排查方式。同时，文章提供了使用阿里云邮件推送服务、关闭源站Web端口、配置默认假证书等实用的防护方案，帮助博主在不影响正常功能的前提下有效隐藏源站IP，提升网站整体安全性。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="博客源站IP泄露的两种主要方式与防护指南">
-<meta property="og:url" content="https://www.xscnet.cn/posts/p3420260329/">
+    <meta name="description" content="Mete0r-欢迎来到我的虚拟小世界">
+<meta property="og:type" content="website">
+<meta property="og:title" content="-Mete0r's Blog | 壹人小站-">
+<meta property="og:url" content="https://www.xscnet.cn/tags/%E4%B8%AA%E4%BA%BA%E5%BD%A2%E8%B1%A1/">
 <meta property="og:site_name" content="-Mete0r's Blog | 壹人小站-">
-<meta property="og:description" content="源站IP泄露是博客安全中常见但容易被忽视的问题。本文结合实际案例，详细分析了邮件推送和TLS/SSL证书两种泄露源站IP的典型途径，包括其原理、成因以及具体排查方式。同时，文章提供了使用阿里云邮件推送服务、关闭源站Web端口、配置默认假证书等实用的防护方案，帮助博主在不影响正常功能的前提下有效隐藏源站IP，提升网站整体安全性。">
+<meta property="og:description" content="Mete0r-欢迎来到我的虚拟小世界">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg">
-<meta property="article:published_time" content="2026-03-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-03-29T06:05:05.000Z">
 <meta property="article:author" content="Mete0r">
-<meta property="article:tag" content="博客">
-<meta property="article:tag" content="教学">
-<meta property="article:tag" content="服务器">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="article:tag" content="Meter0r">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg">
   
   
   
-  <meta name="keywords" content="博客,教学,服务器">
+  <meta name="keywords" content="Meter0r">
 
   <!-- feed -->
   
@@ -352,12 +48,12 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mete0r","sameAs":[],"image":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg"},"dateCreated":"2026-03-29T00:00:00+08:00","dateModified":"2026-03-29T14:05:05+08:00","datePublished":"2026-03-29T00:00:00+08:00","description":"源站IP泄露是博客安全中常见但容易被忽视的问题。本文结合实际案例，详细分析了邮件推送和TLS/SSL证书两种泄露源站IP的典型途径，包括其原理、成因以及具体排查方式。同时，文章提供了使用阿里云邮件推送服务、关闭源站Web端口、配置默认假证书等实用的防护方案，帮助博主在不影响正常功能的前提下有效隐藏源站IP，提升网站整体安全性。","headline":"博客源站IP泄露的两种主要方式与防护指南","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.xscnet.cn/posts/p3420260329/"},"publisher":{"@type":"Organization","name":"Mete0r","sameAs":[],"image":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg","logo":{"@type":"ImageObject","url":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg"}},"url":"https://www.xscnet.cn/posts/p3420260329/","keywords":"博客, 教学, 服务器","thumbnailUrl":"https://img.xscnet.cn//i/2026/03/29/69c8c6ac766bb.png","image":1}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://www.xscnet.cn","author":{"@type":"Person","name":"Mete0r","sameAs":[],"image":"https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg"},"name":"-Mete0r's Blog | 壹人小站-","description":"Mete0r-欢迎来到我的虚拟小世界","url":"https://www.xscnet.cn"}</script>
   <link rel="stylesheet" href="/css/ak.css"><link rel="stylesheet" href="/css/ech0-timeline.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="all" onload="this.media=&quot;all&quot;"><link rel="stylesheet" href="/css/fixmode.css">
 </head>
 <body><div class="sitebg"><div class="siteblur"></div></div>
 
-<div class="l_body content" id="start" layout="post" type="tech"><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<div class="l_body index" id="start" layout="undefined" type="undefined"><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy="" class="avatar" src="https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg"></a><a class="title" href="/"><div class="main">-Mete0r's Blog | 壹人小站-</div><div class="sub normal cap">今人不见古时月，今月曾经照古人</div><div class="sub hover cap" style="opacity:0"> 我喜欢你</div></a></div></header>
@@ -369,175 +65,30 @@
 <div class="widgets">
 <div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
 
-
+<widget class="widget-wrapper markdown"><div class="widget-header dis-select"><span class="name">欢迎帅哥美女</span></div><div class="widget-body fs14"><p>欢迎 <span id="visitor-location" style="color: pink; font-weight: bold;">加载中…</span> 的小伙伴 访问我的博客<br>您的IP:<span id="visitor-ip" class="ip-glass">****</span><br><span id="welcome-slogan" style="color: #add8e6;">加载中…</span><br>关于我可以前往 <a target="_blank" rel="noopener" href="https://xscnet.cn/">我的个人主页</a> 查看  </p>
+<p><a href="/bloglog/">博客更新日志</a></p>
+<hr>
+<p>如果您觉得访问速度异常,不妨点击左下角邮件图标反馈给我</p>
+<script src="/js/location.js"></script>
+<script src="/js/slogan.js"></script>
+</div></widget>
 
 <widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/posts/p3820260502/"><span class="title">AI导致的乱象以及个人形象与大家的初次见面</span></a><a class="item title" href="/posts/p3720260420/"><span class="title">游戏体验：《PRAGMATA》(识质存在)</span></a><a class="item title" href="/posts/p3620260418/"><span class="title">轻量化个人主页</span></a><a class="item title" href="/posts/p3520260403/"><span class="title">使用Hexo搭建自己的博客</span></a><a class="item title" href="/posts/p3420260329/"><span class="title">博客源站IP泄露的两种主要方式与防护指南</span></a><a class="item title" href="/posts/p3320260325/"><span class="title">三月小记：春雨、体检与博客二三事</span></a><a class="item title" href="/posts/p3220260307/"><span class="title">近期随笔：对生活的总结和对博客主题的探索</span></a><a class="item title" href="/posts/p3120260303/"><span class="title">博客框架更新！</span></a><a class="item title" href="/posts/p3020260228/"><span class="title">各位，好久不见!</span></a><a class="item title" href="/posts/p2920251025/"><span class="title">致歉通知</span></a></div></widget>
 </div>
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="/go.html?url=aHR0cHM6Ly9naXRodWIuY29tL21ldGUwcnhzYw" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://cdn.jsdmirror.com/gh/mete0rxsc/StaticsRes@master/BlogStatic/Icon/svg/github-line.svg"></a><a class="social" href="/go.html?url=aHR0cHM6Ly94LmNvbS9DcW1veXVhbi8" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://cdn.jsdmirror.com/gh/mete0rxsc/StaticsRes@master/BlogStatic/Icon/svg/twitter-x-line.svg"></a><a class="social" href="mailto:Mete0r_xsc@hotmail.com" rel="noopener noreferrer"><img src="https://cdn.jsdmirror.com/gh/mete0rxsc/StaticsRes@master/BlogStatic/Icon/svg/mail-line.svg"></a><a class="social" href="https://www.travellings.cn/go.html" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://cdn.jsdmirror.com/gh/mete0rxsc/StaticsRes@master/BlogStatic/Icon/svg/train-line.svg"></a><a class="social" href="/go.html?url=aHR0cHM6Ly9zcGFjZS5iaWxpYmlsaS5jb20vNDgyNzg3MTIx" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://cdn.jsdmirror.com/gh/mete0rxsc/StaticsRes@master/BlogStatic/Icon/svg/bilibili-line.svg"></a><a class="social" href="https://xscnet.cn/" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://cdn.jsdmirror.com/gh/mete0rxsc/StaticsRes@master/BlogStatic/Icon/svg/Fa6RegularAddressCard.svg"></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
+<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy="" class="avatar" src="https://img.xscnet.cn//i/2026/04/11/69da166816afc.jpg"></a><a class="title" href="/"><div class="main">-Mete0r's Blog | 壹人小站-</div><div class="sub normal cap">今人不见古时月，今月曾经照古人</div><div class="sub hover cap" style="opacity:0"> 我喜欢你</div></a></div></header>
+
+ 
 
 
 
 
-<div class="article banner top">
-  <div class="content">
-    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-28T16:00:00.000Z">2026-03-29</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-03-29T06:05:05.000Z">2026-03-29</time></span></div></div></div>
-    
-    <div class="bottom only-title">
-      
-      <div class="text-area">
-        <h1 class="text title"><span>博客源站IP泄露的两种主要方式与防护指南</span></h1>
-        
-      </div>
-    </div>
-    
-  </div>
-  </div><article class="md-text content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近 <strong><a target="_blank" rel="noopener" href="https://koxiuqiu.cn/">klcdm老哥</a></strong> 提醒我，提醒道我的服务器IP会因为以前的邮件推送方式泄露<br>我一查，果然如此<br><a target="_blank" rel="noopener" href="https://koxiuqiu.cn/posts/a8migration/">kl的往期文章</a>也提到过此事  </p>
-<h2 id="泄露原因"><a href="#泄露原因" class="headerlink" title="泄露原因"></a>泄露原因</h2><h3 id="1-邮件推送"><a href="#1-邮件推送" class="headerlink" title="1. 邮件推送"></a>1. 邮件推送</h3><p>如果您的博客使用的是QQ邮箱或者163邮箱诸如此类的邮箱则会遇到这种情况  </p>
-<blockquote>
-<p><strong>Q: 哪些SMTP服务会导致IP泄露？</strong><br>A: 答案是：几乎所有允许你直接使用“客户端/服务器”方式连接的SMTP服务，都有可能泄露</p>
-</blockquote>
-<h4 id="QQ邮箱SMTP发信泄露源站IP的原理"><a href="#QQ邮箱SMTP发信泄露源站IP的原理" class="headerlink" title="QQ邮箱SMTP发信泄露源站IP的原理"></a>QQ邮箱SMTP发信泄露源站IP的原理</h4><p>这种情况常见于你的博客网站使用了邮件功能（如注册验证、密码找回、通知邮件），并且邮件是通过源站服务器直接使用SMTP发送的  </p>
-<ul>
-<li><p>1 .背景知识  </p>
-<p>很多网站会配置邮件服务，使用第三方邮箱（如QQ邮箱、163邮箱、企业邮箱）的SMTP服务器来代发邮件<br>邮件原文中，通常包含发件服务器的IP信息，这是SMTP协议的一部分  </p>
-</li>
-<li><p>2 .泄露原理  </p>
-<p>当网站源站服务器通过SMTP协议连接QQ邮箱的发信服务器时，QQ邮箱会在邮件的原始头部（Email Header）中记录下连接来源的IP地址，即网站源站服务器的公网IP<br>这个信息通常位于 Received: from 字段中<br>我的博客在原来的方案中也是这么泄露了源站IP：<br><strong>当然，如果您以前与我进行互访，于此知道了我的源站IP，请您务必不要泄露，谢谢您的配合</strong><br><img src="https://img.xscnet.cn//i/2026/03/29/69c8c0ba76723.png"><br>您可以这么查看：点击邮件，然后选择查看，查看邮件源<br><img src="https://img.xscnet.cn//i/2026/03/29/69c8bf81b1f78.png">  </p>
-<p>攻击者只需要：<br>注册一个网站账号，触发一封邮件（如验证邮件）发送到自己的邮箱<br>查看邮件的原文/源代码（不同邮箱客户端叫法不同，如Outlook的“查看邮件源”）<br>在邮件头部找到 Received 字段，其中就可能包含网站真实的源站IP  </p>
-</li>
-<li><p>3 .常见成因<br>网站没有使用专业的邮件发送服务（如SendCloud、阿里云邮件推送等），而是直接使用普通的SMTP邮箱代发<br>更重要的是，发信操作是在源站服务器上直接进行的，而不是通过CDN或专门的中继服务器  </p>
-</li>
-<li><p>4 .普遍存在的漏洞:<br>源站IP的泄露关键在于：泄露源站IP的并不是邮箱服务商本身，而是你“从哪里”连上它的SMTP服务器发信  </p>
-<p>所有自建邮件服务器：如果你在自己的源站服务器上搭建了邮件服务，然后直接用这台服务器发信，那么邮件的Received头里必定包含你服务器的IP –这是最直接的泄露方式  </p>
-<p>使用第三方SMTP中继服务：当你配置邮件客户端（如Outlook、Foxmail）或代码，填写了第三方SMTP服务器信息（如mail.xxxx.com），但连接的IP是你服务器的IP时，依然会泄露</p>
-</li>
-</ul>
-<h5 id="SMTP泄露源站IP的解决方案"><a href="#SMTP泄露源站IP的解决方案" class="headerlink" title="SMTP泄露源站IP的解决方案"></a>SMTP泄露源站IP的解决方案</h5><p>我自己的解决方案目前是使用<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9kbS5jb25zb2xlLmFsaXl1bi5jb20vIy9kaXJlY3RtYWlsL0hvbWUvY24taGFuZ3pob3U">阿里云邮件推送服务</a>的免费额度<br>他是信誉分机制，具体统计规则如下(资料来源：<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9oZWxwLmFsaXl1bi5jb20vemgvZGlyZWN0LW1haWwvZ2V0dGluZy1zdGFydGVkL3Byb2R1Y3QtcnVsZXMvP3NwbT01MTc2LjIwMjA1MjAxNTAuY29uc29sZS1iYXNlX2hlbHAuZGV4dGVybmFsLjUxNDI3NTI4ckRtUm9w">阿里云邮件推送服务产品规则</a>)：<br>每个阿里云账户开通登录后，不同的阿里云账户会根据在阿里云整体等级分配不同的初始值，最低初始信誉等级为2级，对应日额度为 2000 封/日。信誉等级最高是16级，对应日额度为 1000 万封/日<br><img src="https://img.xscnet.cn//i/2026/03/29/69c8c185a29ed.png"><br>信誉等级与日额度的对应关系如下：  </p>
-<table>
-<thead>
-<tr>
-<th>信誉等级</th>
-<th>日额度（封）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1级</td>
-<td>500</td>
-</tr>
-<tr>
-<td>2级</td>
-<td>2,000</td>
-</tr>
-<tr>
-<td>3级</td>
-<td>5,000</td>
-</tr>
-<tr>
-<td>4级</td>
-<td>8,000</td>
-</tr>
-<tr>
-<td>5级</td>
-<td>10,000</td>
-</tr>
-<tr>
-<td>6级</td>
-<td>20,000</td>
-</tr>
-<tr>
-<td>7级</td>
-<td>50,000</td>
-</tr>
-<tr>
-<td>8级</td>
-<td>100,000</td>
-</tr>
-<tr>
-<td>9级</td>
-<td>200,000</td>
-</tr>
-<tr>
-<td>10级</td>
-<td>500,000</td>
-</tr>
-<tr>
-<td>11级</td>
-<td>800,000</td>
-</tr>
-<tr>
-<td>12级</td>
-<td>1,000,000</td>
-</tr>
-<tr>
-<td>13级</td>
-<td>2,000,000</td>
-</tr>
-<tr>
-<td>14级</td>
-<td>5,000,000</td>
-</tr>
-<tr>
-<td>15级</td>
-<td>8,000,000</td>
-</tr>
-<tr>
-<td>16级</td>
-<td>10,000,000</td>
-</tr>
-</tbody></table>
-<p>那么对于我们自己的博客，这个额度已经足够使用了</p>
-<p>而通过这样配置的SMTP服务，并不会显示你服务器源站IP，而是显示阿里云邮件推送服务器的IP<br>但这种方式有一个明显的弊端：邮件推送服务通常使用共享IP节点。一旦同一IP下有其他用户发送恶意邮件，该IP便可能被各大邮箱服务商列入黑名单，从而影响正常邮件的送达率<br>但这样，优点却显而易见  </p>
-<ol>
-<li>邮件发送服务不会泄露源站IP  </li>
-<li>邮件使用的是你自己的域名，较为有辨识度</li>
-</ol>
-<h3 id="2-证书泄露源站IP"><a href="#2-证书泄露源站IP" class="headerlink" title="2. 证书泄露源站IP"></a>2. 证书泄露源站IP</h3><p>当你为网站配置HTTPS时，会用到一份TLS/SSL证书<br>这份证书里，有一个字段叫 <code>“使用者备用名称”</code> ，里面清清楚楚地写着你的网站域名，有时甚至直接包含了服务器的IP地址或内网域<br>当扫描者通过IP访问拿到了你的证书，会根据域名与你的IP相比对，一旦某个IP在443端口返回了与你网站相同的证书信息，基本可以确定这就是源站IP  </p>
-<h4 id="证书泄露源站IP的原理"><a href="#证书泄露源站IP的原理" class="headerlink" title="证书泄露源站IP的原理"></a>证书泄露源站IP的原理</h4><p>这种情况主要发生在使用HTTPS且配置了CDN的网站上  </p>
-<p>-1 .背景知识<br>  网站为了安全、加速，通常会套用CDN（如Cloudflare、腾讯云EO等）<br>  用户访问时，DNS解析到CDN节点，CDN节点再将请求转发给源站服务器<br>  理想情况下，所有流量都经过CDN，源站IP不对外暴露  </p>
-<ul>
-<li>2 .泄露原理<br>在HTTPS中，TLS/SSL证书通常绑定在域名上<br>如果源站服务器本身也开启了HTTPS（80/443端口），并且直接绑定了该域名的证书，那么当有人绕过CDN，直接向源站IP发起HTTPS请求时，源站会返回该证书<br>攻击者可以通过全网扫描，寻找返回该域名证书的IP。一旦某个IP在443端口返回了与你网站相同的证书信息，基本可以确定这就是源站IP<br><strong>这里提及一个很恶心人的网站：<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cuc2hvZGFuLmlvLw">shodan.io</a>在这个网站里，他会不间断的扫描所有IP段，寻找你服务器的漏洞，您可以这样尝试 <a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cuc2hvZGFuLmlvL2hvc3QvJUU0JUJEJUEwJUU2JTlDJThEJUU1JThBJUExJUU1JTk5JUE4JUU3JTlBJTg0SVAlRTUlOUMlQjAlRTUlOUQlODA">https://www.shodan.io/host/你服务器的IP地址</a></strong></li>
-</ul>
-<p>-3 .常见成因<br>  在您为你的网站配置CDN时，没有关闭源站的Web服务（Nginx、Apache等）<br>  或者因为“只允许CDN回源IP访问”的防火墙规则配置不完善，导致源站80/443端口对公网开放  </p>
-<h5 id="证书泄露源站IP的解决方案"><a href="#证书泄露源站IP的解决方案" class="headerlink" title="证书泄露源站IP的解决方案"></a>证书泄露源站IP的解决方案</h5><ol>
-<li><p>关闭源站80/443端口对公网开放<br>这是最简单直接的方法，因为关闭了这些端口，你只需要配置CDN回源的端口即可，但大多数攻击者并不会费尽心思扫描你所有的端口  </p>
-</li>
-<li><p>为default_site设置一个假的证书<br>这种情况使用在您无法关闭源站的443端口，或者CDN回源的端口被限制时<br>您可以创建一个假的证书，自签10年即可，名字可以取：CNMSB扫描器Gun一边去.crt<br>这样当访问者不携带域名信息访问您的IP时，返回的只是defalut_site的假证书，而不是您博客的证书</p>
-</li>
-</ol>
-<h2 id="我的解决日志"><a href="#我的解决日志" class="headerlink" title="我的解决日志"></a>我的解决日志</h2><p>截至2026/03/29,所有问题均解决<br>CDN回源使用IP回源，域名指向IP已取消<br>邮件推送已切换为阿里云<br><strong>目前.top域名已无法访问博客，301已取消，请使用<a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly93d3cueHNjbmV0LmNu6K6_6ZeuLw">https://www.xscnet.cn访问</a></strong><br><strong>若您访问<a target="_blank" rel="noopener" href="https://xscnet.cn/">https://xscnet.cn/</a> 则无法跳转，由于阿里云限制，只有http访问可自动301到3w,https访问子域名无法跳转 - 由于博主设置了HSTS，您可能无法使用HTTP协议</strong><br><strong>同样的，<a target="_blank" rel="noopener" href="https://www.xscnas.top/">https://www.xscnas.top/</a> 无法正常跳转，需切换为http协议 - 由于博主设置了HSTS，您可能无法使用HTTP协议</strong>  </p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>任何漏洞，都是有成因的，只有你找到这个成因，才能找到对应的解决方案<br>不过，漏洞始终随着软件的更新而出现，我们只有努力的应对，才可以使我们的网站保持最安全的状态<br>不能亵渎任何的漏洞<br><strong>常在河边走，哪有不湿鞋</strong>  </p>
-</article>
-<div class="article-footer">
-    <section id="license">
-      <div class="header"><span>许可协议</span></div>
-      <div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="/go.html?url=aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
-</div>
-    </section>
-    
-
-</div>
-
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/p3520260403/">使用Hexo搭建自己的博客</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/p3320260325/">三月小记：春雨、体检与博客二三事</a></div></section></div>
-
-
-
-
-  <div class="related-wrap md-text" id="comments">
-    <section class="header cmt-title cap theme">
-      <p>快来参与讨论吧~</p>
-
-    </section>
-    <section class="body cmt-body artalk">
-      
-
-<div class="artalk " id="artalk_container"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
-    </section>
-  </div>
-
+<div class="navbar top"><div class="navbar-blur"><div class="navbar-container"><nav class="post"><a href="/">近期发布</a><a href="/categories/">分类</a><a class="active" href="/tags/">标签：个人形象</a><a href="/archives/">归档</a></nav></div></div></div>
+<div class="post-list post"><a class="post-card post photo" href="/posts/p3820260502/">
+<div class="cover" position="bottom"><img src="https://img.xscnet.cn//i/2026/05/02/69f6192d7751b.webp"><div class="cover-info" position="bottom"><div class="text headline">AI导致的乱象以及个人形象与大家的初次见面</div><div class="text caption">祝各位五一快乐！</div></div></div>
+</a></div>
 
 
 <footer class="page-footer footnote"><hr><div class="sitemap" style="column-count:4;"><div class="sitemap-group"><span class="fs15">博客</span><a href="/links/">友链</a><a href="/about/">AboutMe</a><a href="/atom.xml">订阅RSS</a><a target="_blank" rel="noopener" href="https://valaxy.xscnet.cn/">旧框架Valaxy</a></div><div class="sitemap-group"><span class="fs15">其他服务</span><a target="_blank" rel="noopener" href="https://img.xscnet.cn/">流云图库</a><a target="_blank" rel="noopener" href="https://uptime.xscnet.cn/status/mete0r">服务监控</a><a target="_blank" rel="noopener" href="https://nz.xscnas.top/">哪吒面板</a><a target="_blank" rel="noopener" href="https://talk.xscnet.cn/">碎碎念Ech0</a></div><div class="sitemap-group"><span class="fs15">社交</span><a target="_blank" rel="noopener" href="https://blogscn.fun/"><img src="https://photo.xiangming.site/img/blogscn.png" width="88.1px" height="14px" alt="笔墨迹" style="border-radius:8px;"></a><a target="_blank" rel="noopener" href="https://www.foreverblog.cn/go.html"><img src="https://img.xscnet.cn//i/2025/07/16/687738ebb74df.gif" width="49.7px" height="14px" alt="十年之约" style="border-radius:8px;"></a><a target="_blank" rel="noopener" href="https://www.travellings.cn/go-by-clouds.html"><img src="https://www.travellings.cn/assets/logo.gif" width="56px" height="14px" alt="开往" style="border-radius:0px;"></a><a target="_blank" rel="noopener" href="https://travel.moe/go.html"><img src="https://travel.moe/images/logo/pink.png" width="85.4px" height="14px" alt="异次元之旅" style="border-radius:8px;"></a></div><div class="sitemap-group"><span class="fs15">关于</span><a href="/site/">本站简介</a><a href="/privacy/">隐私政策</a></div></div><div class="text"><div style="text-align: center; line-height: 1.6;">
@@ -555,12 +106,7 @@
 </div>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-<div class="widgets">
-
-
-
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%84%E9%9C%B2%E5%8E%9F%E5%9B%A0"><span class="toc-text">泄露原因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%82%AE%E4%BB%B6%E6%8E%A8%E9%80%81"><span class="toc-text">1. 邮件推送</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#QQ%E9%82%AE%E7%AE%B1SMTP%E5%8F%91%E4%BF%A1%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">QQ邮箱SMTP发信泄露源站IP的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SMTP%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">SMTP泄露源站IP的解决方案</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AF%81%E4%B9%A6%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP"><span class="toc-text">2. 证书泄露源站IP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">证书泄露源站IP的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E6%B3%84%E9%9C%B2%E6%BA%90%E7%AB%99IP%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">证书泄露源站IP的解决方案</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E8%A7%A3%E5%86%B3%E6%97%A5%E5%BF%97"><span class="toc-text">我的解决日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"></path><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"></path></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"></path></svg><span>参与讨论</span></a></div></widget>
-</div></aside><div class="float-panel">
+</aside><div class="float-panel">
   <button type="button" style="display:none" class="laptop-only rightbar-toggle mobile" onclick="sidebar.rightbar()">
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
   </button>
@@ -1055,49 +601,6 @@
 
 <!-- optional -->
 
-  <script type="module">
-  const el = document.getElementById('artalk_container');
-  util.viewportLazyload(el, load_artalk, true);
-
-  function load_artalk() {
-    if (!el) return;
-    utils.css('https://unpkg.com/artalk@2.9.1/dist/Artalk.css');
-    utils.js('https://unpkg.com/artalk@2.9.1/dist/Artalk.js', {defer: true}).then(function () {
-      // 监听 Artalk 事件
-      // FIXME: Artalk开启了懒加载会导致评论输入预览框里的图也变成data-src，导致看不到图
-      // Artalk.use((ctx) => {
-      //   ctx.on('list-loaded', () => window.lazyLoadInstance?.update())
-      // })
-      const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
-      const artalk = Artalk.init({
-        el: '#artalk_container',
-        pageKey: path,
-        pageTitle: '博客源站IP泄露的两种主要方式与防护指南',
-        server: 'https://artalk.xscnet.cn/',
-        site: 'Mete0rBlog',
-        darkMode: 'auto',
-        
-        imgUploader: function(file) {
-          let headers = new Headers();
-          headers.set('Accept', 'application/json');
-          
-            headers.set('Authorization', 'Bearer 1|dnM43Cha9V481cSNSyUjMOrRMk3hiAwV0L210Aat')
-          
-          let formData = new FormData();
-          formData.append('file', file);
-          return fetch('https://img.xscnet.cn/api/v1/upload',{
-            method: 'POST',
-            body: formData,
-            headers: headers
-            }).then((resp) => resp.json())
-              .then((resp) => resp.data.links.url)
-          },
-        
-      });
-    });
-  }
-</script>
-
 
 
 <script defer="">
@@ -1343,264 +846,5 @@
 
 <!-- inject -->
 <script src="/js/ak.js"></script><script src="/js/ak-1.js"></script><script src="/js/aksafego.js"></script><script src="/js/ech0-timeline.js"></script><script src="https://cdn.jsdmirror.com/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdmirror.com/npm/meting@2.0.1/dist/Meting.min.js"></script><script src="https://koxiuqiu-1321010956.cos.ap-guangzhou.myqcloud.com/js/day-night-toggle-bottom.js"></script><script src="/js/aktextgif.js"></script><script src="/js/fix-toc.js"></script>
-</div><!-- hexo injector body_end start --><script>// LivePhoto类，管理单个Live Photo的行为
-class LivePhoto {
-  constructor(container, config) {
-    this.container = container;
-    this.staticImage = container.querySelector(".live-photo-static");
-    this.video = container.querySelector(".live-photo-video");
-    this.config = config;
-    this.hasAutoPlayed = false;
-    this.isPlaying = false;
-    this.hoverTimeout = null;
-    this.isWeixin = this.detectWeixinBrowser();
-
-    // 在微信环境中调整配置
-    if (this.isWeixin && this.config.weixin_disable_autoplay) {
-      this.config.autoplay = false;
-
-      // 修改微信环境下的badge
-      this.modifyWeixinBadge();
-    }
-
-    // 绑定事件
-    this.bindEvents();
-  }
-
-  // 检测微信浏览器
-  detectWeixinBrowser() {
-    const ua = navigator.userAgent.toLowerCase();
-    return ua.includes("micromessenger");
-  }
-
-  // 修改微信环境下的badge
-  modifyWeixinBadge() {
-    let badge = this.container.querySelector(".live-badge");
-
-    // 如果没有badge，创建一个
-    if (!badge && this.config.badge) {
-      badge = document.createElement("div");
-      badge.className = `live-badge ${
-        this.config.badge_position || "bottom-left"
-      }`;
-      this.container.appendChild(badge);
-    }
-
-    // 修改badge内容和样式
-    if (badge) {
-      if(!this.config.badge_text) {
-        badge.innerHTML = "点击播放";
-      } else{
-        badge.innerHTML = this.config.badge_text + " | 点击播放";
-      }
-    }
-  }
-
-  // 绑定事件
-  bindEvents() {
-    // 桌面端：鼠标悬停播放
-    if (this.config.hover_to_play) {
-      this.container.addEventListener("mouseenter", () =>
-        this.handleHoverStart()
-      );
-      this.container.addEventListener("mouseleave", () =>
-        this.handleHoverEnd()
-      );
-    }
-
-    // 点击事件 - 在微信环境中这是主要的交互方式
-    if (this.config.click_to_play) {
-      this.container.addEventListener("click", (e) => {
-        this.play();
-      });
-    }
-
-    // 监听视频结束事件
-    this.video.addEventListener("ended", () => this.stop());
-
-    // 监听视频加载事件
-    this.video.addEventListener("loadstart", () => this.showLoading());
-    this.video.addEventListener("canplay", () => this.hideLoading());
-    this.video.addEventListener("error", () => this.hideLoading());
-  }
-
-  // 处理悬停开始
-  handleHoverStart() {
-    // 清除之前的超时
-    if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-
-    // 设置延迟播放
-    this.hoverTimeout = setTimeout(() => {
-      this.play();
-    }, this.config.hover_delay || 300);
-  }
-
-  // 处理悬停结束
-  handleHoverEnd() {
-    // 清除悬停超时
-    if (this.hoverTimeout) {
-      clearTimeout(this.hoverTimeout);
-      this.hoverTimeout = null;
-    }
-
-    // 如果视频正在播放，不停止（让它播放完）
-  }
-
-  // 显示加载指示器
-  showLoading() {
-    let loadingEl = this.container.querySelector(".live-loading");
-    if (!loadingEl && this.config.loading_animation) {
-      loadingEl = document.createElement("div");
-      loadingEl.className = "live-loading";
-      this.container.appendChild(loadingEl);
-    }
-    if (loadingEl) {
-      loadingEl.style.display = "block";
-    }
-  }
-
-  // 隐藏加载指示器
-  hideLoading() {
-    const loadingEl = this.container.querySelector(".live-loading");
-    if (loadingEl) {
-      loadingEl.style.display = "none";
-    }
-  }
-
-  // 播放视频
-  play() {
-    if (this.isPlaying) return;
-
-    this.isPlaying = true;
-    this.staticImage.style.opacity = 0;
-    this.video.classList.add("playing");
-    if (this.video.readyState < 3) { // HAVE_FUTURE_DATA
-      this.showLoading();
-    }
-
-    // 播放视频
-    const playPromise = this.video.play();
-
-    if (playPromise !== undefined) {
-      playPromise.catch((error) => {
-        console.error("视频播放失败:", error);
-        this.hideLoading();
-        this.isPlaying = false;
-      });
-    }
-  }
-
-  // 停止播放
-  stop() {
-    this.video.classList.remove("playing");
-    this.staticImage.style.opacity = 1;
-    this.isPlaying = false;
-    this.hideLoading();
-  }
-
-  // 自动播放（当进入视口时）
-  autoPlay() {
-    if (!this.hasAutoPlayed && this.config.autoplay) {
-      this.hasAutoPlayed = true;
-      this.play();
-    }
-  }
-}
-
-// 页面主控制器
-class LivePhotoPage {
-  constructor(config) {
-    this.config = config;
-    this.livePhotos = [];
-    this.observer = null;
-
-    this.init();
-  }
-
-  // 初始化
-  init() {
-    this.detectLivePhotos();
-
-    // 检测是否为微信环境
-    const isWeixin = navigator.userAgent
-      .toLowerCase()
-      .includes("micromessenger");
-
-    // 如果在微信环境中且禁用自动播放，则不设置Intersection Observer
-    if (isWeixin && this.config.weixin_disable_autoplay) {
-      return;
-    }
-
-    // 如果启用懒加载，设置Intersection Observer
-    if (this.config.lazy_load) {
-      this.setupIntersectionObserver();
-    } else if (this.config.autoplay) {
-      // 如果不使用懒加载，直接自动播放所有
-      this.livePhotos.forEach((livePhoto) => livePhoto.autoPlay());
-    }
-  }
-
-  // 检测页面中的所有Live Photo容器
-  detectLivePhotos() {
-    const containers = document.querySelectorAll(".live-photo-container");
-
-    containers.forEach((container) => {
-      // 检查是否已经初始化过
-      if (!container.dataset.initialized) {
-        const livePhoto = new LivePhoto(container, this.config);
-        this.livePhotos.push(livePhoto);
-        container.dataset.initialized = "true";
-      }
-    });
-  }
-
-  // 设置Intersection Observer
-  setupIntersectionObserver() {
-    // 如果已有observer，先断开所有观察
-    if (this.observer) {
-      this.observer.disconnect();
-    }
-
-    // 创建新的observer
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // 找到对应的LivePhoto实例
-            const container = entry.target;
-            const livePhoto = this.livePhotos.find(
-              (lp) => lp.container === container
-            );
-
-            if (livePhoto) {
-              livePhoto.autoPlay();
-
-              // 如果不需要持续观察，可以取消观察
-              if (!this.config.keep_observing) {
-                this.observer.unobserve(container);
-              }
-            }
-          }
-        });
-      },
-      {
-        threshold: this.config.threshold,
-        rootMargin: "0px 0px 10% 0px", // 底部提前10%触发
-      }
-    );
-
-    // 开始观察所有Live Photo容器
-    this.livePhotos.forEach((livePhoto) => {
-      this.observer.observe(livePhoto.container);
-    });
-  }
-}
-
-// 当DOM加载完成后初始化
-document.addEventListener("DOMContentLoaded", function () {
-  if (window.LivePhotoConfig && window.LivePhotoConfig.enable) {
-    window.livePhotoPage = new LivePhotoPage(window.LivePhotoConfig);
-  }
-});
-</script><!-- hexo injector body_end end -->
+</div>
 </body></html>
